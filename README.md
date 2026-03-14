@@ -1,4 +1,4 @@
-*Sehat — Digital Health Identity for Rural India*
+🏥 Sehat — Digital Health Identity for Rural India
 
 > *"In rural India, patients don't carry medical records — they carry paper scraps. Sehat converts a simple QR code into a lifelong, portable health identity."*
 
