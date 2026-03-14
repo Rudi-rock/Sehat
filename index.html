@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Sehat — Digital Health Identity</title>
+<link rel="manifest" href="/Sehat/manifest.json">
+<meta name="theme-color" content="#00c97a">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -353,6 +355,11 @@ window.addEventListener('scroll',()=>{
 },{passive:true});
 
 setTimeout(()=>tc.classList.add('show'),700);
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/Sehat/sw.js')
+}
 </script>
 </body>
 </html>
