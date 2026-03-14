@@ -3,87 +3,79 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sehat — Scan Patient QR</title>
+<title>Sehat — Patient Health Card</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--red:#e05252;--red-dim:#3a1010}
+:root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--red:#e05252}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
-nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
 .logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);text-decoration:none}
 .nav-links{display:flex;gap:1.5rem}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
-.nav-links a:hover,.nav-links a.active{color:var(--green)}
-.main{max-width:700px;margin:0 auto;padding:3rem 2rem}
-h1{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-1px;margin-bottom:0.4rem}
-h1 em{color:var(--green);font-style:normal}
-.subtitle{color:var(--muted);font-size:0.9rem;margin-bottom:2rem;line-height:1.6}
+.nav-links a:hover{color:var(--green)}
 
-/* SCAN INPUT */
-.scan-box{background:var(--cb);border:1px solid var(--cborder);border-radius:16px;padding:2rem;margin-bottom:2rem}
-.scan-label{font-size:0.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;display:block}
-.scan-input-row{display:flex;gap:0.8rem}
-.scan-input{flex:1;background:#0d1a12;border:1px solid var(--cborder);border-radius:10px;padding:0.8rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;font-family:monospace}
-.scan-input:focus{border-color:var(--green)}
-.btn-scan{background:var(--green);color:#000;border:none;border-radius:10px;padding:0.8rem 1.5rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:opacity 0.2s;white-space:nowrap}
-.btn-scan:hover{opacity:0.85}
-.scan-hint{font-size:0.8rem;color:var(--muted);margin-top:0.8rem}
-.scan-hint span{color:var(--green);cursor:pointer;text-decoration:underline}
+.main{max-width:600px;margin:0 auto;padding:2rem 1.5rem}
 
-/* ERROR */
-.error-box{background:#1a0a0a;border:1px solid #3a1010;border-radius:12px;padding:1.2rem 1.5rem;color:var(--red);font-size:0.9rem;margin-bottom:1.5rem;display:none}
-
-/* EMERGENCY CARD */
-.emergency-card{background:linear-gradient(135deg,#1a0808,#0f0404);border:1px solid #5a1a1a;border-radius:20px;padding:2rem;margin-bottom:1.5rem;display:none;animation:slideUp 0.4s ease}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.emergency-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(224,82,82,0.15);border:1px solid rgba(224,82,82,0.3);color:var(--red);padding:0.35rem 1rem;border-radius:100px;font-size:0.75rem;font-weight:600;margin-bottom:1.5rem}
-.emergency-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1s infinite}
+.emergency-banner{background:linear-gradient(135deg,#1f0606,#120404);border:1px solid #5a1212;border-radius:16px;padding:1rem 1.5rem;display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem}
+.e-dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:blink 1s infinite;flex-shrink:0}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-.patient-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid #3a1010}
-.patient-avatar{width:56px;height:56px;border-radius:50%;background:#3a1010;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--red);flex-shrink:0}
-.patient-name{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white)}
-.patient-id-text{font-size:0.7rem;color:var(--muted);font-family:monospace;margin-top:3px}
-.emergency-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
-.e-field{background:rgba(0,0,0,0.3);border-radius:10px;padding:1rem}
-.e-field-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.4rem}
-.e-field-value{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--white)}
-.e-field-value.danger{color:var(--red)}
-.e-field-value.safe{color:var(--green)}
-.e-field.full{grid-column:span 2}
-.btn-full-access{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);border-radius:10px;padding:0.85rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
-.btn-full-access:hover{background:var(--green);color:#000}
-.access-note{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.8rem}
+.e-banner-text{font-size:0.8rem;color:#f08080;line-height:1.4}
+.e-banner-text strong{color:var(--red);font-weight:700}
 
-/* SUCCESS CARD */
-.full-access-card{background:var(--cb);border:1px solid var(--cborder);border-radius:20px;padding:2rem;display:none;animation:slideUp 0.4s ease}
-.access-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,201,122,0.1);border:1px solid rgba(0,201,122,0.2);color:var(--green);padding:0.35rem 1rem;border-radius:100px;font-size:0.75rem;font-weight:600;margin-bottom:1.5rem}
-.full-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.f-field{border-bottom:1px solid var(--cborder);padding-bottom:0.8rem}
-.f-field-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.3rem}
-.f-field-value{font-size:0.9rem;color:var(--white);font-weight:500}
-.f-field.full{grid-column:span 2}
-.otp-wrap{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--cborder)}
-.otp-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem}
-.otp-row{display:flex;gap:0.8rem}
-.otp-input{flex:1;background:#0d1a12;border:1px solid var(--cborder);border-radius:10px;padding:0.75rem 1rem;color:var(--white);font-family:monospace;font-size:1.1rem;letter-spacing:4px;text-align:center;outline:none;transition:border-color 0.2s}
-.otp-input:focus{border-color:var(--green)}
-.btn-otp{background:var(--green);color:#000;border:none;border-radius:10px;padding:0.75rem 1.2rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer}
-.otp-hint{font-size:0.75rem;color:var(--muted);margin-top:0.5rem}
-.otp-hint span{color:var(--green);cursor:pointer}
+.id-card-large{width:100%;border-radius:20px;background:linear-gradient(135deg,#0d2419,#071509);border:1px solid var(--green-dim);position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,201,122,0.15),0 20px 50px rgba(0,0,0,0.6);margin-bottom:1.5rem;padding:1.5rem}
+.card-top-stripe{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.card-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.card-logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--green);position:absolute;top:14px;right:16px}
+.big-avatar{width:60px;height:60px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--green);flex-shrink:0}
+.card-name-block .patient-full-name{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white)}
+.card-name-block .patient-id{font-size:0.65rem;color:var(--muted);font-family:monospace;margin-top:3px}
+.card-name-block .patient-meta{font-size:0.8rem;color:var(--muted);margin-top:3px}
 
-/* DEMO PATIENTS */
-.demo-section{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--cborder)}
-.demo-title{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.8rem}
-.demo-chips{display:flex;flex-wrap:wrap;gap:0.5rem}
-.demo-chip{background:var(--cb);border:1px solid var(--cborder);border-radius:100px;padding:0.4rem 0.9rem;font-size:0.78rem;color:var(--muted);cursor:pointer;transition:all 0.2s}
-.demo-chip:hover{border-color:var(--green);color:var(--green)}
+.critical-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem}
+.c-block{background:rgba(0,0,0,0.3);border-radius:12px;padding:1rem}
+.c-block.full{grid-column:span 2}
+.c-block.danger{background:rgba(224,82,82,0.08);border:1px solid rgba(224,82,82,0.15)}
+.c-block.safe{background:rgba(0,201,122,0.06);border:1px solid rgba(0,201,122,0.1)}
+.c-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.4rem}
+.c-value{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--white)}
+.c-value.red{color:var(--red)}
+.c-value.green{color:var(--green)}
+.c-value.normal{font-size:0.9rem;font-weight:500;font-family:'DM Sans',sans-serif}
 
-@media(max-width:768px){
-  nav{padding:1rem 1.5rem}
-  .main{padding:2rem 1.5rem}
-  .emergency-grid,.full-grid{grid-template-columns:1fr}
-  .e-field.full,.f-field.full{grid-column:span 1}
-  .scan-input-row{flex-direction:column}
+.more-section{background:var(--cb);border:1px solid var(--cborder);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
+.more-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem}
+.more-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+.m-item{border-bottom:1px solid var(--cborder);padding-bottom:0.7rem}
+.m-item.full{grid-column:span 2}
+.m-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.3rem}
+.m-value{font-size:0.88rem;color:var(--white);font-weight:500;line-height:1.4}
+
+.no-data{text-align:center;padding:4rem 2rem}
+.no-data-icon{font-size:3rem;margin-bottom:1rem;opacity:0.4}
+.no-data h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:0.5rem}
+.no-data p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
+.manual-section{background:var(--cb);border:1px solid var(--cborder);border-radius:16px;padding:1.5rem;text-align:left}
+.manual-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.7rem;display:block}
+.manual-row{display:flex;gap:0.8rem}
+.manual-input{flex:1;background:#0d1a12;border:1px solid var(--cborder);border-radius:10px;padding:0.7rem 1rem;color:var(--white);font-family:monospace;font-size:0.85rem;outline:none;transition:border-color 0.2s}
+.manual-input:focus{border-color:var(--green)}
+.btn-lookup{background:var(--green);color:#000;border:none;border-radius:10px;padding:0.7rem 1.2rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer}
+
+.action-bar{display:flex;gap:0.8rem;flex-wrap:wrap}
+.btn-action{flex:1;min-width:120px;padding:0.8rem;border-radius:12px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;border:none;transition:all 0.2s;text-align:center;text-decoration:none;display:block}
+.btn-green{background:var(--green);color:#000}
+.btn-green:hover{opacity:0.85}
+.btn-outline{background:transparent;border:1px solid var(--cborder)!important;color:var(--muted)}
+.btn-outline:hover{border-color:var(--green)!important;color:var(--green)}
+
+.reg-tag{font-size:0.65rem;color:var(--muted);text-align:center;margin-top:0.8rem}
+
+@media(max-width:500px){
+  .critical-grid{grid-template-columns:1fr}
+  .c-block.full{grid-column:span 1}
+  .more-grid{grid-template-columns:1fr}
+  .m-item.full{grid-column:span 1}
 }
 </style>
 </head>
@@ -92,195 +84,145 @@ h1 em{color:var(--green);font-style:normal}
   <a href="index.html" class="logo">Sehat.</a>
   <div class="nav-links">
     <a href="register.html">Register</a>
-    <a href="scan.html" class="active">Scan</a>
     <a href="dashboard.html">Dashboard</a>
   </div>
 </nav>
 
-<div class="main">
-  <h1>Scan <em>Patient QR</em></h1>
-  <p class="subtitle">Enter the patient's Sehat ID to access emergency information instantly. No login required for emergency data.</p>
-
-  <div class="scan-box">
-    <span class="scan-label">Enter Sehat Health ID</span>
-    <div class="scan-input-row">
-      <input type="text" class="scan-input" id="scanInput" placeholder="SHT-2024-NA-XXXXX" oninput="this.value=this.value.toUpperCase()"/>
-      <button class="btn-scan" onclick="scanPatient()">Scan →</button>
-    </div>
-    <p class="scan-hint">No physical scanner? <span onclick="loadDemo()">Load a demo patient</span> to test the system.</p>
-
-    <div class="demo-section" id="demoSection" style="display:none">
-      <p class="demo-title">Registered Patients</p>
-      <div class="demo-chips" id="demoChips"></div>
-    </div>
-  </div>
-
-  <div class="error-box" id="errorBox">⚠ Patient not found. Check the ID and try again.</div>
-
-  <!-- EMERGENCY DATA -->
-  <div class="emergency-card" id="emergencyCard">
-    <div class="emergency-badge">Emergency Access</div>
-    <div class="patient-header">
-      <div class="patient-avatar" id="eAvatar">?</div>
-      <div>
-        <div class="patient-name" id="eName">—</div>
-        <div class="patient-id-text" id="ePid">—</div>
-      </div>
-    </div>
-    <div class="emergency-grid">
-      <div class="e-field">
-        <div class="e-field-label">Blood Group</div>
-        <div class="e-field-value danger" id="eBlood">—</div>
-      </div>
-      <div class="e-field">
-        <div class="e-field-label">Age</div>
-        <div class="e-field-value" id="eAge">—</div>
-      </div>
-      <div class="e-field full">
-        <div class="e-field-label">Known Allergies</div>
-        <div class="e-field-value danger" id="eAllergies">—</div>
-      </div>
-      <div class="e-field full">
-        <div class="e-field-label">Emergency Contact</div>
-        <div class="e-field-value safe" id="eEmergency">—</div>
-      </div>
-      <div class="e-field full">
-        <div class="e-field-label">Critical Conditions</div>
-        <div class="e-field-value" id="eConditions">—</div>
-      </div>
-    </div>
-    <button class="btn-full-access" onclick="requestFullAccess()">Request Full Medical Records →</button>
-    <p class="access-note">🔒 Full records require patient OTP consent</p>
-  </div>
-
-  <!-- FULL ACCESS -->
-  <div class="full-access-card" id="fullCard">
-    <div class="otp-wrap" id="otpWrap">
-      <p class="otp-title">🔒 Patient OTP Required</p>
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem">Ask the patient to share their OTP sent to their registered number. Demo OTP: <strong style="color:var(--green)">1234</strong></p>
-      <div class="otp-row">
-        <input type="text" class="otp-input" id="otpInput" maxlength="4" placeholder="____"/>
-        <button class="btn-otp" onclick="verifyOTP()">Verify</button>
-      </div>
-      <p class="otp-hint" id="otpHint">Didn't receive OTP? <span onclick="document.getElementById('otpInput').value='1234'">Use demo OTP</span></p>
-    </div>
-
-    <div id="fullRecords" style="display:none">
-      <div class="access-badge">✓ Full Access Granted</div>
-      <div class="full-grid" id="fullGrid"></div>
-      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--cborder);display:flex;gap:1rem">
-        <a href="dashboard.html" style="flex:1;text-align:center;background:var(--green);color:#000;padding:0.8rem;border-radius:10px;text-decoration:none;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem">Open Full Dashboard →</a>
-      </div>
-    </div>
-  </div>
+<div class="main" id="mainContent">
+  <!-- Filled by JS -->
 </div>
 
 <script>
-// Demo patients
-const demoPatients={
-  'SHT-DEMO-MH-00001':{id:'SHT-DEMO-MH-00001',name:'Priya Sharma',age:'28',gender:'Female',blood:'O+',district:'Pune, MH',allergies:'Penicillin',emergency:'Ravi Sharma — 9876543210',conditions:'None',registered:'01/01/2024'},
-  'SHT-DEMO-UP-00002':{id:'SHT-DEMO-UP-00002',name:'Ramesh Kumar',age:'52',gender:'Male',blood:'A+',district:'Lucknow, UP',allergies:'None',emergency:'Sunita Kumar — 9812345678',conditions:'Diabetes Type 2, Hypertension',registered:'15/03/2024'},
-  'SHT-DEMO-RJ-00003':{id:'SHT-DEMO-RJ-00003',name:'Meera Devi',age:'67',gender:'Female',blood:'B-',district:'Jaipur, RJ',allergies:'Aspirin, Sulfa drugs',emergency:'Mohan Devi — 9988776655',conditions:'Arthritis, Hypothyroidism',registered:'22/06/2024'},
-};
+function getInitials(n){return(n||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
 
-function getInitials(name){return name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function isEmpty(v){return!v||v.trim()===''||v.trim().toLowerCase()==='none'||v.trim().toLowerCase()==='not provided'}
 
-function getAllPatients(){
-  const stored=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
-  return {...demoPatients,...stored};
-}
+function renderCard(p){
+  const main=document.getElementById('mainContent');
+  const hasAllergy=!isEmpty(p.allergies)&&p.allergies.toLowerCase()!=='none';
+  const hasMeds=!isEmpty(p.meds)&&p.meds.toLowerCase()!=='none';
+  const hasConditions=!isEmpty(p.conditions)&&p.conditions.toLowerCase()!=='none';
 
-function loadDemo(){
-  document.getElementById('demoSection').style.display='block';
-  const chips=document.getElementById('demoChips');
-  chips.innerHTML='';
-  const all=getAllPatients();
-  Object.values(all).forEach(p=>{
-    const chip=document.createElement('div');
-    chip.className='demo-chip';
-    chip.textContent=p.name+' — '+p.id;
-    chip.onclick=()=>{
-      document.getElementById('scanInput').value=p.id;
-      scanPatient();
-    };
-    chips.appendChild(chip);
-  });
-}
+  main.innerHTML=`
+    <div class="emergency-banner">
+      <div class="e-dot"></div>
+      <div class="e-banner-text"><strong>Emergency Access Active</strong> — All critical medical data is shown below. No authentication required.</div>
+    </div>
 
-function scanPatient(){
-  const id=document.getElementById('scanInput').value.trim().toUpperCase();
-  const all=getAllPatients();
-  const patient=all[id];
+    <div class="id-card-large">
+      <div class="card-top-stripe"></div>
+      <div class="card-logo-text">Sehat.</div>
 
-  document.getElementById('errorBox').style.display='none';
-  document.getElementById('emergencyCard').style.display='none';
-  document.getElementById('fullCard').style.display='none';
+      <div class="card-header">
+        <div class="big-avatar">${getInitials(p.name)}</div>
+        <div class="card-name-block">
+          <div class="patient-full-name">${p.name||'Unknown'}</div>
+          <div class="patient-id">${p.id||'SHT-UNKNOWN'}</div>
+          <div class="patient-meta">${p.age?p.age+' yrs':''} ${p.gender?'· '+p.gender:''} ${p.district?'· '+p.district:''}</div>
+        </div>
+      </div>
 
-  if(!id){alert('Please enter a Sehat ID.');return;}
-  if(!patient){document.getElementById('errorBox').style.display='block';return;}
+      <div class="critical-grid">
+        <div class="c-block danger">
+          <div class="c-label">Blood Group</div>
+          <div class="c-value red">${p.blood||'Unknown'}</div>
+        </div>
+        <div class="c-block">
+          <div class="c-label">Age</div>
+          <div class="c-value">${p.age?p.age+' yrs':'Unknown'}</div>
+        </div>
+        <div class="c-block full ${hasAllergy?'danger':''}">
+          <div class="c-label">⚠ Known Allergies</div>
+          <div class="c-value ${hasAllergy?'red':'normal'}">${p.allergies||'None known'}</div>
+        </div>
+        <div class="c-block full ${hasMeds?'':''}">
+          <div class="c-label">💊 Current Medications</div>
+          <div class="c-value normal">${p.meds||'None'}</div>
+        </div>
+        <div class="c-block full ${hasConditions?'danger':''}">
+          <div class="c-label">🏥 Medical Conditions</div>
+          <div class="c-value normal">${p.conditions||'None'}</div>
+        </div>
+        <div class="c-block full safe">
+          <div class="c-label">📞 Emergency Contact</div>
+          <div class="c-value green normal">${p.emergency||'Not provided'}</div>
+        </div>
+      </div>
+    </div>
 
-  // Show emergency card
-  document.getElementById('eAvatar').textContent=getInitials(patient.name);
-  document.getElementById('eName').textContent=patient.name;
-  document.getElementById('ePid').textContent=patient.id;
-  document.getElementById('eBlood').textContent=patient.blood||'Unknown';
-  document.getElementById('eAge').textContent=(patient.age?patient.age+' years':'Unknown');
-  document.getElementById('eAllergies').textContent=patient.allergies||'None known';
-  document.getElementById('eEmergency').textContent=patient.emergency||'Not provided';
-  document.getElementById('eConditions').textContent=patient.conditions||'None';
+    <div class="more-section">
+      <div class="more-title">Full Patient Record</div>
+      <div class="more-grid">
+        <div class="m-item"><div class="m-label">Full Name</div><div class="m-value">${p.name||'—'}</div></div>
+        <div class="m-item"><div class="m-label">Gender</div><div class="m-value">${p.gender||'—'}</div></div>
+        <div class="m-item"><div class="m-label">Blood Group</div><div class="m-value">${p.blood||'—'}</div></div>
+        <div class="m-item"><div class="m-label">Age</div><div class="m-value">${p.age?p.age+' years':'—'}</div></div>
+        <div class="m-item full"><div class="m-label">District / State</div><div class="m-value">${p.district||'—'}</div></div>
+        <div class="m-item full"><div class="m-label">Allergies</div><div class="m-value">${p.allergies||'None'}</div></div>
+        <div class="m-item full"><div class="m-label">Medications</div><div class="m-value">${p.meds||'None'}</div></div>
+        <div class="m-item full"><div class="m-label">Medical Conditions</div><div class="m-value">${p.conditions||'None'}</div></div>
+        <div class="m-item full"><div class="m-label">Emergency Contact</div><div class="m-value">${p.emergency||'Not provided'}</div></div>
+        <div class="m-item"><div class="m-label">Sehat ID</div><div class="m-value" style="font-family:monospace;font-size:0.75rem">${p.id||'—'}</div></div>
+        <div class="m-item"><div class="m-label">Registered</div><div class="m-value">${p.date||'—'}</div></div>
+      </div>
+    </div>
 
-  document.getElementById('emergencyCard').style.display='block';
-  document.getElementById('emergencyCard').scrollIntoView({behavior:'smooth',block:'center'});
+    <div class="action-bar">
+      <a href="register.html" class="btn-action btn-outline">+ Register New Patient</a>
+      <a href="dashboard.html" class="btn-action btn-green">Open Dashboard →</a>
+    </div>
+    <p class="reg-tag">Powered by Sehat Digital Health · ABHA Compatible · rudi-rock.github.io/Sehat</p>
+  `;
 
-  // Log access
   const logs=JSON.parse(localStorage.getItem('sehat_access_logs')||'[]');
-  logs.push({patientId:id,type:'Emergency',time:new Date().toLocaleString('en-IN'),accessor:'Doctor (Demo)'});
+  logs.push({patientId:p.id,type:'Emergency (QR Scan)',time:new Date().toLocaleString('en-IN'),accessor:'Doctor (QR Scan)'});
   localStorage.setItem('sehat_access_logs',JSON.stringify(logs));
 }
 
-function requestFullAccess(){
-  document.getElementById('fullCard').style.display='block';
-  document.getElementById('otpWrap').style.display='block';
-  document.getElementById('fullRecords').style.display='none';
-  document.getElementById('fullCard').scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-function verifyOTP(){
-  const otp=document.getElementById('otpInput').value.trim();
-  if(otp==='1234'){
-    document.getElementById('otpWrap').style.display='none';
-    const id=document.getElementById('scanInput').value.trim().toUpperCase();
-    const all=getAllPatients();
-    const patient=all[id];
-    showFullRecords(patient);
-    const logs=JSON.parse(localStorage.getItem('sehat_access_logs')||'[]');
-    logs.push({patientId:id,type:'Full Access (OTP verified)',time:new Date().toLocaleString('en-IN'),accessor:'Doctor (Demo)'});
-    localStorage.setItem('sehat_access_logs',JSON.stringify(logs));
-  } else {
-    document.getElementById('otpHint').innerHTML='<span style="color:var(--red)">Incorrect OTP. Try again.</span> Demo OTP: <strong style="color:var(--green)">1234</strong>';
-  }
-}
-
-function showFullRecords(p){
-  const grid=document.getElementById('fullGrid');
-  const fields=[
-    {label:'Full Name',value:p.name,full:false},
-    {label:'Age / Gender',value:(p.age||'—')+' / '+(p.gender||'—'),full:false},
-    {label:'Blood Group',value:p.blood||'—',full:false},
-    {label:'District',value:p.district||'—',full:false},
-    {label:'Allergies',value:p.allergies||'None',full:true},
-    {label:'Medical Conditions',value:p.conditions||'None',full:true},
-    {label:'Emergency Contact',value:p.emergency||'Not provided',full:true},
-    {label:'Registered On',value:p.registered||'—',full:false},
-    {label:'Sehat ID',value:p.id,full:false},
-  ];
-  grid.innerHTML=fields.map(f=>`
-    <div class="f-field${f.full?' full':''}">
-      <div class="f-field-label">${f.label}</div>
-      <div class="f-field-value">${f.value}</div>
+function renderNoData(){
+  document.getElementById('mainContent').innerHTML=`
+    <div class="no-data">
+      <div class="no-data-icon">🪪</div>
+      <h2>No Patient Data Found</h2>
+      <p>This QR code doesn't contain patient data, or it may be invalid. Enter a Sehat ID manually below.</p>
+      <div class="manual-section">
+        <span class="manual-label">Enter Sehat Health ID</span>
+        <div class="manual-row">
+          <input type="text" class="manual-input" id="manualId" placeholder="SHT-2024-MH-XXXXX" oninput="this.value=this.value.toUpperCase()"/>
+          <button class="btn-lookup" onclick="lookupManual()">Look up →</button>
+        </div>
+      </div>
     </div>
-  `).join('');
-  document.getElementById('fullRecords').style.display='block';
+  `;
+}
+
+function lookupManual(){
+  const id=document.getElementById('manualId').value.trim().toUpperCase();
+  const pts=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
+  if(pts[id]){renderCard(pts[id]);}
+  else{alert('Patient not found. Please register first.');}
+}
+
+const params=new URLSearchParams(window.location.search);
+const pid=params.get('id');
+
+if(pid){
+  const p={
+    id:pid,
+    name:params.get('name')||'',
+    age:params.get('age')||'',
+    gender:params.get('gender')||'',
+    blood:params.get('blood')||'',
+    district:params.get('district')||'',
+    allergies:params.get('allergies')||'None',
+    emergency:params.get('emergency')||'Not provided',
+    meds:params.get('meds')||'None',
+    conditions:params.get('conditions')||'None',
+    date:params.get('date')||''
+  };
+  renderCard(p);
+} else {
+  renderNoData();
 }
 </script>
 </body>

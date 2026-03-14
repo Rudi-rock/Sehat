@@ -31,8 +31,6 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
 .preview-side{position:sticky;top:100px}
 .preview-card{background:var(--cb);border:1px solid var(--cborder);border-radius:20px;padding:2rem;text-align:center}
 .preview-title{font-family:'Syne',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
-
-/* ID CARD */
 .id-card{width:100%;max-width:300px;height:180px;margin:0 auto 1.5rem;border-radius:14px;background:linear-gradient(135deg,#0d2419,#071509);border:1px solid var(--green-dim);position:relative;overflow:hidden;box-shadow:0 0 30px rgba(0,201,122,0.1)}
 .card-stripe{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
 .card-logo{position:absolute;top:12px;left:14px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--green)}
@@ -43,30 +41,24 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
 .card-fields{position:absolute;top:92px;left:14px;display:flex;gap:14px}
 .card-field label{display:block;font-size:0.45rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:1px}
 .card-field span{font-size:0.72rem;font-weight:500;color:var(--white)}
-.card-qr-box{position:absolute;bottom:10px;right:10px;width:46px;height:46px;background:#fff;border-radius:4px;padding:3px;display:flex;align-items:center;justify-content:center}
+.card-qr-box{position:absolute;bottom:10px;right:10px;width:46px;height:46px;background:#fff;border-radius:4px;padding:3px}
 .card-qr-box canvas,.card-qr-box img{width:40px!important;height:40px!important}
 .card-footer-strip{position:absolute;bottom:0;left:0;right:0;height:26px;background:rgba(0,201,122,0.04);border-top:1px solid var(--cborder);display:flex;align-items:center;padding:0 12px}
 .card-footer-strip span{font-size:0.45rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
-
-/* QR LARGE */
-.qr-large{background:#fff;border-radius:12px;padding:12px;display:inline-block;margin:0 auto 1rem}
-.qr-large canvas,.qr-large img{display:block}
-.qr-id-text{font-size:0.75rem;color:var(--muted);margin-bottom:1rem;font-family:monospace}
-.btn-row{display:flex;gap:0.8rem;justify-content:center}
-.btn-sm{padding:0.6rem 1.2rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem}
+.qr-large-wrap{background:#fff;border-radius:12px;padding:12px;display:inline-block;margin:0 auto 0.8rem}
+.qr-id-text{font-size:0.72rem;color:var(--muted);margin-bottom:1rem;font-family:monospace}
+.btn-row{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap}
+.btn-sm{padding:0.6rem 1.2rem;border-radius:100px;font-size:0.78rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem}
 .btn-dl{background:var(--green);color:#000}
 .btn-dl:hover{opacity:0.85}
-.btn-scan{background:transparent;border:1px solid var(--cborder)!important;color:var(--white)}
-.btn-scan:hover{border-color:var(--green)!important;color:var(--green)}
+.btn-ghost{background:transparent;border:1px solid var(--cborder)!important;color:var(--white)}
+.btn-ghost:hover{border-color:var(--green)!important;color:var(--green)}
 .empty-state{padding:2rem 0;color:var(--muted);font-size:0.9rem}
 .empty-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.4}
 .success-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,201,122,0.1);border:1px solid rgba(0,201,122,0.2);color:var(--green);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem}
-@media(max-width:768px){
-  nav{padding:1rem 1.5rem}
-  .main{grid-template-columns:1fr;padding:2rem 1.5rem}
-  .preview-side{position:static}
-  .form-row{grid-template-columns:1fr}
-}
+.scan-tip{background:rgba(0,201,122,0.06);border:1px solid rgba(0,201,122,0.15);border-radius:10px;padding:0.8rem 1rem;font-size:0.8rem;color:var(--muted);margin-bottom:1rem;line-height:1.5}
+.scan-tip strong{color:var(--green)}
+@media(max-width:768px){nav{padding:1rem 1.5rem}.main{grid-template-columns:1fr;padding:2rem 1.5rem}.preview-side{position:static}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -80,104 +72,96 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
 </nav>
 
 <div class="main">
-  <!-- FORM -->
   <div class="form-side">
     <h1>Register <em>Patient</em></h1>
-    <p>Fill in the patient details below. A unique Sehat QR Health ID will be generated instantly.</p>
+    <p>Fill in patient details. A QR code will be generated — when scanned with any phone, it opens the patient's health card instantly.</p>
 
     <div class="form-group">
       <label>Full Name</label>
-      <input type="text" id="fname" placeholder="e.g. Arjun Patel" oninput="updatePreview()"/>
+      <input type="text" id="fname" placeholder="e.g. Arjun Patel" oninput="livePreview()"/>
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label>Age</label>
-        <input type="number" id="fage" placeholder="34" min="0" max="120" oninput="updatePreview()"/>
+        <input type="number" id="fage" placeholder="34" min="0" max="120" oninput="livePreview()"/>
       </div>
       <div class="form-group">
         <label>Gender</label>
-        <select id="fgender" onchange="updatePreview()">
+        <select id="fgender" onchange="livePreview()">
           <option value="">Select</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
+          <option>Male</option><option>Female</option><option>Other</option>
         </select>
       </div>
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label>Blood Group</label>
-        <select id="fblood" onchange="updatePreview()">
+        <select id="fblood" onchange="livePreview()">
           <option value="">Select</option>
-          <option>A+</option><option>A-</option>
-          <option>B+</option><option>B-</option>
-          <option>AB+</option><option>AB-</option>
-          <option>O+</option><option>O-</option>
+          <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+          <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
         </select>
       </div>
       <div class="form-group">
         <label>District / State</label>
-        <input type="text" id="fdistrict" placeholder="Nashik, MH" oninput="updatePreview()"/>
+        <input type="text" id="fdistrict" placeholder="Nashik, MH" oninput="livePreview()"/>
       </div>
     </div>
-
     <div class="form-group">
       <label>Known Allergies</label>
-      <input type="text" id="fallergies" placeholder="e.g. Penicillin, Peanuts (or None)" oninput="updatePreview()"/>
+      <input type="text" id="fallergies" placeholder="e.g. Penicillin, Peanuts (or None)"/>
     </div>
-
     <div class="form-group">
       <label>Emergency Contact</label>
-      <input type="text" id="femergency" placeholder="Name — Phone number" oninput="updatePreview()"/>
+      <input type="text" id="femergency" placeholder="Name — Phone number"/>
     </div>
-
     <div class="form-group">
-      <label>Existing Conditions</label>
-      <textarea id="fconditions" placeholder="e.g. Diabetes Type 2, Hypertension (or None)" oninput="updatePreview()"></textarea>
+      <label>Current Medications</label>
+      <input type="text" id="fmeds" placeholder="e.g. Metformin 500mg, Amlodipine (or None)"/>
     </div>
-
-    <button class="btn-generate" onclick="generatePatient()">Generate Sehat Health ID →</button>
+    <div class="form-group">
+      <label>Medical Conditions</label>
+      <textarea id="fconditions" placeholder="e.g. Diabetes Type 2, Hypertension (or None)"></textarea>
+    </div>
+    <button class="btn-generate" onclick="generateQR()">Generate Sehat Health ID + QR →</button>
   </div>
 
-  <!-- PREVIEW -->
   <div class="preview-side">
     <div class="preview-card">
-      <p class="preview-title">Live Preview</p>
+      <p class="preview-title">Patient Health Card</p>
 
       <div id="emptyState" class="empty-state">
         <div class="empty-icon">🪪</div>
-        <p>Fill in the form to see<br/>the patient ID card</p>
+        <p>Fill in the form to generate<br/>the patient QR health card</p>
       </div>
 
       <div id="cardPreview" style="display:none">
-        <!-- ID CARD -->
         <div class="id-card">
           <div class="card-stripe"></div>
           <div class="card-logo">Sehat.</div>
           <div class="card-type-lbl">Health ID</div>
-          <div class="card-avatar" id="cardAvatar">?</div>
-          <div class="card-pname" id="cardName">—</div>
-          <div class="card-pid" id="cardPid">SHT-????</div>
+          <div class="card-avatar" id="cAvatar">?</div>
+          <div class="card-pname" id="cName">—</div>
+          <div class="card-pid" id="cPid">SHT-????</div>
           <div class="card-fields">
-            <div class="card-field"><label>Blood</label><span id="cardBlood">—</span></div>
-            <div class="card-field"><label>Age</label><span id="cardAge">—</span></div>
-            <div class="card-field"><label>District</label><span id="cardDistrict">—</span></div>
+            <div class="card-field"><label>Blood</label><span id="cBlood">—</span></div>
+            <div class="card-field"><label>Age</label><span id="cAge">—</span></div>
+            <div class="card-field"><label>District</label><span id="cDistrict">—</span></div>
           </div>
-          <div class="card-qr-box" id="cardQrSmall"></div>
+          <div class="card-qr-box" id="cQrSmall"></div>
           <div class="card-footer-strip"><span>Sehat Digital Health · ABHA Compatible</span></div>
         </div>
 
-        <div class="success-badge" id="successBadge" style="display:none">✓ Health ID Generated</div>
-
-        <!-- LARGE QR -->
-        <div id="qrLargeWrap" style="display:none">
-          <div class="qr-large" id="qrLarge"></div>
+        <div id="qrSection" style="display:none">
+          <div class="success-badge">✓ Health ID Generated</div>
+          <div class="scan-tip">
+            <strong>📱 Scan ready!</strong> Anyone who scans this QR with their phone camera will instantly see this patient's health card — no app needed.
+          </div>
+          <div class="qr-large-wrap"><div id="qrLarge"></div></div>
           <p class="qr-id-text" id="qrIdText"></p>
           <div class="btn-row">
             <button class="btn-sm btn-dl" onclick="downloadQR()">⬇ Download QR</button>
-            <a href="scan.html" class="btn-sm btn-scan">Test Scan →</a>
+            <button class="btn-sm btn-ghost" onclick="testScan()">Test Scan →</button>
           </div>
         </div>
       </div>
@@ -186,115 +170,98 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
 </div>
 
 <script>
-let currentPatientId='';
-let qrInstance=null;
-let qrSmallInstance=null;
+let currentId='';
+let currentURL='';
 
-function generateId(){
-  const state=document.getElementById('fdistrict').value.trim().toUpperCase().slice(0,2)||'IN';
-  const num=Math.floor(10000+Math.random()*90000);
-  const year=new Date().getFullYear();
-  return `SHT-${year}-${state}-${num}`;
+function getInitials(n){return n.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?'}
+
+function generatePatientId(){
+  const d=document.getElementById('fdistrict').value.trim().toUpperCase().replace(/[^A-Z]/g,'').slice(0,2)||'IN';
+  return `SHT-${new Date().getFullYear()}-${d}-${Math.floor(10000+Math.random()*90000)}`;
 }
 
-function getInitials(name){
-  if(!name)return '?';
-  return name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-}
-
-function updatePreview(){
+function livePreview(){
   const name=document.getElementById('fname').value.trim();
-  const age=document.getElementById('fage').value;
-  const blood=document.getElementById('fblood').value;
-  const district=document.getElementById('fdistrict').value.trim();
-
-  if(!name){
-    document.getElementById('emptyState').style.display='block';
-    document.getElementById('cardPreview').style.display='none';
-    return;
-  }
-
+  if(!name){document.getElementById('emptyState').style.display='block';document.getElementById('cardPreview').style.display='none';return;}
   document.getElementById('emptyState').style.display='none';
   document.getElementById('cardPreview').style.display='block';
-  document.getElementById('qrLargeWrap').style.display='none';
-  document.getElementById('successBadge').style.display='none';
-
-  document.getElementById('cardAvatar').textContent=getInitials(name);
-  document.getElementById('cardName').textContent=name.length>18?name.slice(0,18)+'...':name;
-  document.getElementById('cardBlood').textContent=blood||'—';
-  document.getElementById('cardAge').textContent=age||'—';
-  document.getElementById('cardDistrict').textContent=district?district.slice(0,10):'—';
-  document.getElementById('cardPid').textContent=currentPatientId||'SHT-????';
+  document.getElementById('qrSection').style.display='none';
+  document.getElementById('cAvatar').textContent=getInitials(name);
+  document.getElementById('cName').textContent=name.length>18?name.slice(0,17)+'…':name;
+  document.getElementById('cBlood').textContent=document.getElementById('fblood').value||'—';
+  document.getElementById('cAge').textContent=document.getElementById('fage').value||'—';
+  document.getElementById('cDistrict').textContent=(document.getElementById('fdistrict').value||'—').slice(0,10);
+  document.getElementById('cPid').textContent=currentId||'SHT-????';
 }
 
-function generatePatient(){
+function generateQR(){
   const name=document.getElementById('fname').value.trim();
-  if(!name){alert('Please enter patient name first.');return;}
+  if(!name){alert('Please enter patient name.');return;}
 
-  const age=document.getElementById('fage').value;
-  const gender=document.getElementById('fgender').value;
-  const blood=document.getElementById('fblood').value;
-  const district=document.getElementById('fdistrict').value.trim();
-  const allergies=document.getElementById('fallergies').value.trim()||'None';
-  const emergency=document.getElementById('femergency').value.trim()||'Not provided';
-  const conditions=document.getElementById('fconditions').value.trim()||'None';
+  currentId=generatePatientId();
 
-  currentPatientId=generateId();
+  const params=new URLSearchParams({
+    id:currentId,
+    name:name,
+    age:document.getElementById('fage').value||'',
+    gender:document.getElementById('fgender').value||'',
+    blood:document.getElementById('fblood').value||'',
+    district:document.getElementById('fdistrict').value.trim()||'',
+    allergies:document.getElementById('fallergies').value.trim()||'None',
+    emergency:document.getElementById('femergency').value.trim()||'Not provided',
+    meds:document.getElementById('fmeds').value.trim()||'None',
+    conditions:document.getElementById('fconditions').value.trim()||'None',
+    date:new Date().toLocaleDateString('en-IN')
+  });
 
-  const patientData={
-    id:currentPatientId,
-    name,age,gender,blood,district,
-    allergies,emergency,conditions,
-    registered:new Date().toLocaleDateString('en-IN')
-  };
+  const base=window.location.href.replace('register.html','');
+  currentURL=`${base}scan.html?${params.toString()}`;
 
-  // Save to localStorage
-  const patients=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
-  patients[currentPatientId]=patientData;
-  localStorage.setItem('sehat_patients',JSON.stringify(patients));
+  document.getElementById('cPid').textContent=currentId;
+  document.getElementById('cAvatar').textContent=getInitials(name);
+  document.getElementById('cName').textContent=name.length>18?name.slice(0,17)+'…':name;
+  document.getElementById('cBlood').textContent=document.getElementById('fblood').value||'—';
+  document.getElementById('cAge').textContent=document.getElementById('fage').value||'—';
+  document.getElementById('cDistrict').textContent=(document.getElementById('fdistrict').value||'—').slice(0,10);
 
-  // Update card
-  document.getElementById('cardPid').textContent=currentPatientId;
-  document.getElementById('cardAvatar').textContent=getInitials(name);
-  document.getElementById('cardName').textContent=name.length>18?name.slice(0,18)+'...':name;
-  document.getElementById('cardBlood').textContent=blood||'—';
-  document.getElementById('cardAge').textContent=age||'—';
-  document.getElementById('cardDistrict').textContent=district?district.slice(0,10):'—';
-
-  // Generate large QR
   document.getElementById('qrLarge').innerHTML='';
-  document.getElementById('cardQrSmall').innerHTML='';
+  document.getElementById('cQrSmall').innerHTML='';
 
-  const qrData=JSON.stringify({id:currentPatientId,name,blood,allergies,emergency,conditions});
-
-  qrInstance=new QRCode(document.getElementById('qrLarge'),{
-    text:qrData,width:140,height:140,
+  new QRCode(document.getElementById('qrLarge'),{
+    text:currentURL,width:150,height:150,
     colorDark:'#000000',colorLight:'#ffffff',
     correctLevel:QRCode.CorrectLevel.M
   });
 
-  qrSmallInstance=new QRCode(document.getElementById('cardQrSmall'),{
-    text:qrData,width:40,height:40,
+  new QRCode(document.getElementById('cQrSmall'),{
+    text:currentURL,width:40,height:40,
     colorDark:'#000000',colorLight:'#ffffff',
     correctLevel:QRCode.CorrectLevel.M
   });
 
-  document.getElementById('qrIdText').textContent=currentPatientId;
-  document.getElementById('qrLargeWrap').style.display='block';
-  document.getElementById('successBadge').style.display='inline-flex';
+  document.getElementById('qrIdText').textContent=currentId;
+  document.getElementById('qrSection').style.display='block';
   document.getElementById('cardPreview').style.display='block';
   document.getElementById('emptyState').style.display='none';
+
+  const pts=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
+  pts[currentId]={id:currentId,name,age:document.getElementById('fage').value,gender:document.getElementById('fgender').value,blood:document.getElementById('fblood').value,district:document.getElementById('fdistrict').value.trim(),allergies:document.getElementById('fallergies').value.trim()||'None',emergency:document.getElementById('femergency').value.trim()||'Not provided',meds:document.getElementById('fmeds').value.trim()||'None',conditions:document.getElementById('fconditions').value.trim()||'None',date:new Date().toLocaleDateString('en-IN')};
+  localStorage.setItem('sehat_patients',JSON.stringify(pts));
 }
 
 function downloadQR(){
   setTimeout(()=>{
     const canvas=document.querySelector('#qrLarge canvas');
-    if(!canvas){alert('QR not ready yet.');return;}
+    if(!canvas){alert('Please generate QR first.');return;}
     const link=document.createElement('a');
-    link.download=`Sehat-QR-${currentPatientId}.png`;
+    link.download=`Sehat-QR-${currentId}.png`;
     link.href=canvas.toDataURL();
     link.click();
   },100);
+}
+
+function testScan(){
+  if(currentURL)window.open(currentURL,'_blank');
 }
 </script>
 </body>
