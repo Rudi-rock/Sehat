@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sehat — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--red:#e05252}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
+.logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);text-decoration:none}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
+.nav-links a:hover,.nav-links a.active{color:var(--green)}
+
+.main{max-width:1000px;margin:0 auto;padding:3rem 2rem}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2.5rem;gap:1rem;flex-wrap:wrap}
+.page-header h1{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-1px}
+.page-header h1 em{color:var(--green);font-style:normal}
+.page-header p{color:var(--muted);font-size:0.85rem;margin-top:0.3rem}
+.btn-primary{background:var(--green);color:#000;border:none;border-radius:100px;padding:0.6rem 1.4rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity 0.2s}
+.btn-primary:hover{opacity:0.85}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--cb);border:1px solid var(--cborder);border-radius:14px;padding:1.2rem 1.5rem}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--green);letter-spacing:-1px}
+.stat-lbl{font-size:0.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:0.2rem}
+
+/* TABS */
+.tabs{display:flex;gap:0;border:1px solid var(--cborder);border-radius:12px;overflow:hidden;margin-bottom:2rem;width:fit-content}
+.tab{padding:0.65rem 1.4rem;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.tab.active{background:var(--green);color:#000;font-weight:700}
+.tab:hover:not(.active){color:var(--white)}
+
+/* PATIENT LIST */
+.patient-list{display:flex;flex-direction:column;gap:1rem}
+.patient-row{background:var(--cb);border:1px solid var(--cborder);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;transition:border-color 0.2s;cursor:pointer}
+.patient-row:hover{border-color:var(--green)}
+.p-avatar{width:44px;height:44px;border-radius:50%;background:var(--green-dim);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0}
+.p-info{flex:1}
+.p-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem}
+.p-meta{font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace}
+.p-tags{display:flex;gap:0.5rem;margin-top:0.4rem;flex-wrap:wrap}
+.p-tag{background:rgba(0,201,122,0.08);border:1px solid rgba(0,201,122,0.15);color:var(--green);padding:0.2rem 0.6rem;border-radius:100px;font-size:0.65rem;font-weight:600}
+.p-tag.red{background:rgba(224,82,82,0.08);border-color:rgba(224,82,82,0.15);color:var(--red)}
+.p-actions{display:flex;gap:0.6rem}
+.btn-xs{padding:0.45rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none}
+.btn-xs-green{background:var(--green);color:#000}
+.btn-xs-ghost{background:transparent;border:1px solid var(--cborder)!important;color:var(--muted)}
+.btn-xs-ghost:hover{border-color:var(--green)!important;color:var(--green)}
+
+/* AUDIT LOGS */
+.audit-list{display:flex;flex-direction:column;gap:0.6rem}
+.audit-row{background:var(--cb);border:1px solid var(--cborder);border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem}
+.audit-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.audit-dot.emergency{background:var(--red)}
+.audit-dot.full{background:var(--green)}
+.audit-info{flex:1}
+.audit-type{font-size:0.85rem;font-weight:500}
+.audit-meta{font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace}
+.audit-time{font-size:0.75rem;color:var(--muted);white-space:nowrap}
+
+/* EMPTY */
+.empty{text-align:center;padding:3rem;color:var(--muted)}
+.empty-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.4}
+.empty p{font-size:0.9rem;margin-bottom:1rem}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--cb);border:1px solid var(--cborder);border-radius:20px;padding:2rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;transition:color 0.2s}
+.modal-close:hover{color:var(--white)}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.m-field{border-bottom:1px solid var(--cborder);padding-bottom:0.8rem}
+.m-field.full{grid-column:span 2}
+.m-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.3rem}
+.m-value{font-size:0.9rem;color:var(--white);font-weight:500}
+
+@media(max-width:768px){
+  nav{padding:1rem 1.5rem}
+  .main{padding:2rem 1.5rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .patient-row{flex-wrap:wrap}
+  .p-actions{width:100%}
+  .modal-grid{grid-template-columns:1fr}
+  .m-field.full{grid-column:span 1}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Sehat.</a>
+  <div class="nav-links">
+    <a href="register.html">Register</a>
+    <a href="scan.html">Scan</a>
+    <a href="dashboard.html" class="active">Dashboard</a>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <div>
+      <h1>Sehat <em>Dashboard</em></h1>
+      <p>Manage patients, view records, and monitor access logs</p>
+    </div>
+    <a href="register.html" class="btn-primary">+ Register Patient</a>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Total Patients</div></div>
+    <div class="stat-card"><div class="stat-num" id="statScans">0</div><div class="stat-lbl">Total Scans</div></div>
+    <div class="stat-card"><div class="stat-num" id="statEmergency">0</div><div class="stat-lbl">Emergency Accesses</div></div>
+    <div class="stat-card"><div class="stat-num" id="statFull">0</div><div class="stat-lbl">Full Accesses</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('patients',this)">Patients</button>
+    <button class="tab" onclick="switchTab('logs',this)">Audit Logs</button>
+  </div>
+
+  <!-- PATIENTS TAB -->
+  <div id="tabPatients">
+    <div class="patient-list" id="patientList"></div>
+  </div>
+
+  <!-- LOGS TAB -->
+  <div id="tabLogs" style="display:none">
+    <div class="audit-list" id="auditList"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Patient Record</span>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-grid" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const demoPatients={
+  'SHT-DEMO-MH-00001':{id:'SHT-DEMO-MH-00001',name:'Priya Sharma',age:'28',gender:'Female',blood:'O+',district:'Pune, MH',allergies:'Penicillin',emergency:'Ravi Sharma — 9876543210',conditions:'None',registered:'01/01/2024'},
+  'SHT-DEMO-UP-00002':{id:'SHT-DEMO-UP-00002',name:'Ramesh Kumar',age:'52',gender:'Male',blood:'A+',district:'Lucknow, UP',allergies:'None',emergency:'Sunita Kumar — 9812345678',conditions:'Diabetes Type 2, Hypertension',registered:'15/03/2024'},
+  'SHT-DEMO-RJ-00003':{id:'SHT-DEMO-RJ-00003',name:'Meera Devi',age:'67',gender:'Female',blood:'B-',district:'Jaipur, RJ',allergies:'Aspirin, Sulfa drugs',emergency:'Mohan Devi — 9988776655',conditions:'Arthritis, Hypothyroidism',registered:'22/06/2024'},
+};
+
+function getAllPatients(){
+  const stored=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
+  return {...demoPatients,...stored};
+}
+
+function getInitials(name){return name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+
+function getLogs(){return JSON.parse(localStorage.getItem('sehat_access_logs')||'[]')}
+
+function switchTab(tab,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tabPatients').style.display=tab==='patients'?'block':'none';
+  document.getElementById('tabLogs').style.display=tab==='logs'?'block':'none';
+}
+
+function renderStats(){
+  const patients=getAllPatients();
+  const logs=getLogs();
+  document.getElementById('statTotal').textContent=Object.keys(patients).length;
+  document.getElementById('statScans').textContent=logs.length;
+  document.getElementById('statEmergency').textContent=logs.filter(l=>l.type==='Emergency').length;
+  document.getElementById('statFull').textContent=logs.filter(l=>l.type.includes('Full')).length;
+}
+
+function renderPatients(){
+  const patients=getAllPatients();
+  const list=document.getElementById('patientList');
+  const arr=Object.values(patients);
+
+  if(!arr.length){
+    list.innerHTML=`<div class="empty"><div class="empty-icon">🪪</div><p>No patients registered yet.</p><a href="register.html" class="btn-primary">Register First Patient</a></div>`;
+    return;
+  }
+
+  list.innerHTML=arr.map(p=>`
+    <div class="patient-row" onclick="openModal('${p.id}')">
+      <div class="p-avatar">${getInitials(p.name)}</div>
+      <div class="p-info">
+        <div class="p-name">${p.name}</div>
+        <div class="p-meta">${p.id} · Registered ${p.registered||'—'}</div>
+        <div class="p-tags">
+          ${p.blood?`<span class="p-tag red">${p.blood}</span>`:''}
+          ${p.age?`<span class="p-tag">${p.age} yrs</span>`:''}
+          ${p.district?`<span class="p-tag">${p.district}</span>`:''}
+          ${p.allergies&&p.allergies!=='None'?`<span class="p-tag red">⚠ ${p.allergies}</span>`:''}
+        </div>
+      </div>
+      <div class="p-actions" onclick="event.stopPropagation()">
+        <a href="scan.html?id=${p.id}" class="btn-xs btn-xs-green">Scan →</a>
+        <button class="btn-xs btn-xs-ghost" onclick="openModal('${p.id}')">View</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderLogs(){
+  const logs=getLogs().reverse();
+  const list=document.getElementById('auditList');
+  if(!logs.length){
+    list.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><p>No access logs yet. Scan a patient to generate logs.</p></div>`;
+    return;
+  }
+  list.innerHTML=logs.map(l=>`
+    <div class="audit-row">
+      <div class="audit-dot ${l.type.includes('Full')?'full':'emergency'}"></div>
+      <div class="audit-info">
+        <div class="audit-type">${l.type} — ${l.patientId}</div>
+        <div class="audit-meta">Accessed by: ${l.accessor}</div>
+      </div>
+      <div class="audit-time">${l.time}</div>
+    </div>
+  `).join('');
+}
+
+function openModal(id){
+  const all=getAllPatients();
+  const p=all[id];
+  if(!p)return;
+  document.getElementById('modalTitle').textContent=p.name;
+  const fields=[
+    {label:'Sehat ID',value:p.id,full:true},
+    {label:'Full Name',value:p.name},
+    {label:'Age / Gender',value:(p.age||'—')+' / '+(p.gender||'—')},
+    {label:'Blood Group',value:p.blood||'—'},
+    {label:'District',value:p.district||'—'},
+    {label:'Allergies',value:p.allergies||'None',full:true},
+    {label:'Medical Conditions',value:p.conditions||'None',full:true},
+    {label:'Emergency Contact',value:p.emergency||'Not provided',full:true},
+    {label:'Registered On',value:p.registered||'—'},
+  ];
+  document.getElementById('modalContent').innerHTML=fields.map(f=>`
+    <div class="m-field${f.full?' full':''}">
+      <div class="m-label">${f.label}</div>
+      <div class="m-value">${f.value}</div>
+    </div>
+  `).join('');
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalDirect()}
+function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open')}
+
+// Handle ?id= in URL
+const urlParams=new URLSearchParams(window.location.search);
+const urlId=urlParams.get('id');
+if(urlId)setTimeout(()=>openModal(urlId),300);
+
+renderStats();
+renderPatients();
+renderLogs();
+</script>
+</body>
+</html>
