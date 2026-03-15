@@ -257,10 +257,3 @@ Built with the belief that **healthcare information should reach every Indian �
 
 ⭐ **Star this repo if you believe rural healthcare deserves better technology.**
 
-## 👨‍💻 Built by Rudra
-
-*Sehat is built with the belief that quality healthcare information should reach every Indian — not just those in cities.*
-
----
-
-⭐ **Star this repo if you believe rural healthcare deserves better technology.**
