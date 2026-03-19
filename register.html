@@ -11,8 +11,10 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--input-bg:#0d1a12}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
-nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
+nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 3rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
+.nav-brand{display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap}
 .logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);text-decoration:none}
+.nav-credit{padding:0.32rem 0.78rem;border:1px solid rgba(0,201,122,0.2);border-radius:999px;background:rgba(0,201,122,0.08);font-size:0.72rem;font-weight:600;color:var(--white);white-space:nowrap}
 .nav-links{display:flex;gap:1.5rem}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
 .nav-links a:hover,.nav-links a.active{color:var(--green)}
@@ -90,16 +92,21 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
 
 @media(max-width:768px){
   nav{padding:1rem 1.5rem}
+  .nav-credit{font-size:0.68rem;padding:0.3rem 0.7rem}
   .main{grid-template-columns:1fr;padding:2rem 1.5rem}
   .preview-side{position:static}
   .form-row{grid-template-columns:1fr}
   #sehatCard{width:100%;max-width:340px}
 }
+.page-credit{padding:0 2rem 2rem;text-align:center;color:var(--muted);font-size:0.78rem}
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="logo">Sehat.</a>
+  <div class="nav-brand">
+    <a href="index.html" class="logo">Sehat.</a>
+    <span class="nav-credit">Made by Rudra Pratap singh</span>
+  </div>
   <div class="nav-links">
     <a href="register.html" class="active">Register</a>
     <a href="scan.html">Scan</a>
@@ -230,6 +237,8 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.2rem
     </div>
   </div>
 </div>
+
+<p class="page-credit">Made by Rudra Pratap singh</p>
 
 <script>
 let currentId='';

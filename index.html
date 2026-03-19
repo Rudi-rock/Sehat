@@ -4,8 +4,6 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Sehat — Digital Health Identity</title>
-<link rel="manifest" href="/Sehat/manifest.json">
-<meta name="theme-color" content="#00c97a">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -13,8 +11,10 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 3rem;background:rgba(7,13,10,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--cborder)}
+nav{position:fixed;top:0;left:0;right:0;z-index:999;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 3rem;background:rgba(7,13,10,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--cborder)}
+.nav-brand{display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap}
 .logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green);letter-spacing:-1px}
+.nav-credit{padding:0.35rem 0.8rem;border:1px solid rgba(0,201,122,0.2);border-radius:999px;background:rgba(0,201,122,0.08);font-size:0.72rem;font-weight:600;color:var(--white);white-space:nowrap}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s}
 .nav-links a:hover{color:var(--green)}
@@ -112,7 +112,9 @@ footer a{color:var(--green);font-size:0.85rem;text-decoration:none}
 .qr-svg rect{shape-rendering:crispEdges}
 
 @media(max-width:768px){
-  nav{padding:1rem 1.5rem}.nav-links{display:none}
+  nav{padding:1rem 1.5rem}.nav-links{display:flex;gap:1rem}
+  .nav-links a{font-size:0.75rem}
+  .nav-credit{font-size:0.68rem;padding:0.3rem 0.7rem}
   .scene{flex-direction:column;gap:2rem;padding:5rem 1.5rem 1.5rem}
   .card-wrap{flex:0 0 auto}
   .feat-grid{grid-template-columns:1fr}
@@ -126,7 +128,10 @@ footer a{color:var(--green);font-size:0.85rem;text-decoration:none}
 <div class="progress-bar" id="pb"></div>
 
 <nav>
-  <div class="logo">Sehat.</div>
+  <div class="nav-brand">
+    <div class="logo">Sehat.</div>
+    <span class="nav-credit">Made by Rudra Pratap singh</span>
+  </div>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#about">About</a></li>
@@ -262,7 +267,7 @@ footer a{color:var(--green);font-size:0.85rem;text-decoration:none}
 <!-- FOOTER -->
 <footer>
   <div class="f-logo">Sehat.</div>
-  <p>Built with care for Rural India · MIT License</p>
+  <p>Built with care for Rural India · Made by Rudra Pratap singh</p>
   <a href="https://github.com" target="_blank">GitHub →</a>
 </footer>
 
@@ -355,11 +360,6 @@ window.addEventListener('scroll',()=>{
 },{passive:true});
 
 setTimeout(()=>tc.classList.add('show'),700);
-</script>
-<script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('/Sehat/sw.js')
-}
 </script>
 </body>
 </html>
