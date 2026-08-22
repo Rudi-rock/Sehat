@@ -1,348 +1,376 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sehat — Register Patient</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--input-bg:#0d1a12}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 3rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
-.nav-brand{display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap}
-.logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);text-decoration:none}
-.nav-credit{padding:0.32rem 0.78rem;border:1px solid rgba(0,201,122,0.2);border-radius:999px;background:rgba(0,201,122,0.08);font-size:0.72rem;font-weight:600;color:var(--white);white-space:nowrap}
-.nav-links{display:flex;gap:1.5rem}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
-.nav-links a:hover,.nav-links a.active{color:var(--green)}
-.main{max-width:1000px;margin:0 auto;padding:3rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
-
-/* FORM */
-.form-side h1{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-1px;margin-bottom:0.4rem}
-.form-side h1 em{color:var(--green);font-style:normal}
-.form-side p{color:var(--muted);font-size:0.9rem;margin-bottom:2rem;line-height:1.6}
-.form-group{margin-bottom:1.2rem}
-.form-group label{display:block;font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
-.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--input-bg);border:1px solid var(--cborder);border-radius:10px;padding:0.75rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:0.9rem;transition:border-color 0.2s;outline:none}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--green)}
-.form-group select option{background:var(--cb)}
-.form-group textarea{resize:vertical;min-height:80px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.btn-generate{width:100%;background:var(--green);color:#000;border:none;border-radius:10px;padding:0.9rem;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.2s;margin-top:0.5rem}
-.btn-generate:hover{opacity:0.85;transform:translateY(-1px)}
-
-/* PREVIEW SIDE */
-.preview-side{position:sticky;top:100px}
-.preview-card{background:var(--cb);border:1px solid var(--cborder);border-radius:20px;padding:2rem;text-align:center}
-.preview-title{font-family:'Syne',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem}
-.empty-state{padding:2rem 0;color:var(--muted);font-size:0.9rem}
-.empty-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.4}
-.success-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,201,122,0.1);border:1px solid rgba(0,201,122,0.2);color:var(--green);padding:0.4rem 1rem;border-radius:100px;font-size:0.8rem;font-weight:600;margin-bottom:1rem}
-.scan-tip{background:rgba(0,201,122,0.06);border:1px solid rgba(0,201,122,0.15);border-radius:10px;padding:0.8rem 1rem;font-size:0.8rem;color:var(--muted);margin-bottom:1.2rem;line-height:1.5;text-align:left}
-.scan-tip strong{color:var(--green)}
-
-/* ===================== */
-/* THE DOWNLOADABLE CARD */
-/* ===================== */
-#sehatCard{
-  width:340px;
-  margin:0 auto 1.2rem;
-  background:#ffffff;
-  border-radius:16px;
-  overflow:hidden;
-  font-family:'DM Sans',sans-serif;
-  color:#000;
-  box-shadow:0 8px 32px rgba(0,0,0,0.3);
-}
-.dc-stripe{height:5px;background:linear-gradient(90deg,#00c97a,#00ff9a,#00c97a)}
-.dc-body{padding:18px 18px 14px}
-.dc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
-.dc-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#00994d;letter-spacing:-0.5px}
-.dc-type{font-size:0.55rem;letter-spacing:2px;text-transform:uppercase;color:#999;margin-top:3px}
-.dc-avatar-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.dc-avatar{width:44px;height:44px;border-radius:50%;background:#e8f7ef;border:2px solid #00c97a;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:#00994d;flex-shrink:0}
-.dc-patient-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:#111;line-height:1.2}
-.dc-patient-id{font-size:0.58rem;color:#999;font-family:monospace;margin-top:2px}
-.dc-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
-.dc-field{background:#f5faf7;border-radius:8px;padding:8px 10px}
-.dc-field label{display:block;font-size:0.5rem;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-bottom:2px}
-.dc-field span{font-size:0.85rem;font-weight:700;color:#111}
-.dc-field.danger span{color:#cc2222}
-.dc-bottom{display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid #eee;padding-top:12px}
-.dc-info{flex:1}
-.dc-info-row{display:flex;flex-direction:column;gap:4px}
-.dc-info-item label{font-size:0.5rem;text-transform:uppercase;letter-spacing:1.5px;color:#888}
-.dc-info-item span{font-size:0.75rem;color:#333;font-weight:500}
-.dc-qr-wrap{width:70px;height:70px;background:#fff;border:1px solid #eee;border-radius:8px;padding:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.dc-qr-wrap canvas,.dc-qr-wrap img{width:62px!important;height:62px!important}
-.dc-footer{background:#f5faf7;padding:7px 18px;display:flex;align-items:center;justify-content:space-between}
-.dc-footer-text{font-size:0.5rem;letter-spacing:1.5px;text-transform:uppercase;color:#999}
-.dc-footer-dot{width:5px;height:5px;border-radius:50%;background:#00c97a}
-
-/* BUTTONS */
-.btn-row{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap}
-.btn-sm{padding:0.65rem 1.2rem;border-radius:100px;font-size:0.8rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem}
-.btn-dl{background:var(--green);color:#000}
-.btn-dl:hover{opacity:0.85}
-.btn-ghost{background:transparent;border:1px solid var(--cborder)!important;color:var(--white)}
-.btn-ghost:hover{border-color:var(--green)!important;color:var(--green)}
-
-@media(max-width:768px){
-  nav{padding:1rem 1.5rem}
-  .nav-credit{font-size:0.68rem;padding:0.3rem 0.7rem}
-  .main{grid-template-columns:1fr;padding:2rem 1.5rem}
-  .preview-side{position:static}
-  .form-row{grid-template-columns:1fr}
-  #sehatCard{width:100%;max-width:340px}
-}
-.page-credit{padding:0 2rem 2rem;text-align:center;color:var(--muted);font-size:0.78rem}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Sehat — Patient Registration / मरीज पंजीकरण</title>
+  <meta name="description" content="Register patient and generate an offline-first QR health identity card with zero-auth emergency vitals and encrypted private records."/>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/register.css" />
 </head>
 <body>
-<nav>
-  <div class="nav-brand">
-    <a href="index.html" class="logo">Sehat.</a>
-    <span class="nav-credit">Made by Rudra Pratap singh</span>
-  </div>
-  <div class="nav-links">
-    <a href="register.html" class="active">Register</a>
-    <a href="scan.html">Scan</a>
-    <a href="dashboard.html">Dashboard</a>
-  </div>
-</nav>
 
-<div class="main">
-  <!-- FORM -->
-  <div class="form-side">
-    <h1>Register <em>Patient</em></h1>
-    <p>Fill in patient details. A downloadable ID card with QR code will be generated instantly.</p>
-
-    <div class="form-group">
-      <label>Full Name</label>
-      <input type="text" id="fname" placeholder="e.g. Arjun Patel" oninput="livePreview()"/>
+  <!-- NAVIGATION & ACCESSIBILITY CONTROLS -->
+  <nav aria-label="Main Navigation">
+    <div class="nav-brand">
+      <a href="index.html" class="logo">Sehat.</a>
+      <span class="logo-tag">Offline-First PWA</span>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Age</label>
-        <input type="number" id="fage" placeholder="34" min="0" max="120" oninput="livePreview()"/>
-      </div>
-      <div class="form-group">
-        <label>Gender</label>
-        <select id="fgender" onchange="livePreview()">
-          <option value="">Select</option>
-          <option>Male</option><option>Female</option><option>Other</option>
-        </select>
+
+    <div class="nav-controls">
+      <!-- Bilingual Toggle Button (Accessible Touch Target) -->
+      <button id="langToggleBtn" class="lang-toggle-btn" type="button" aria-label="Switch Language / भाषा बदलें">
+        <span class="lang-indicator"></span>
+        <span id="langLabel">English / हिन्दी</span>
+      </button>
+
+      <div class="nav-links">
+        <a href="register.html" class="active" data-i18n="nav_register">Register Patient</a>
+        <a href="scan.html" data-i18n="nav_scan">Scan Health Card</a>
+        <a href="dashboard.html" data-i18n="nav_dashboard">Patient Dashboard</a>
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Blood Group</label>
-        <select id="fblood" onchange="livePreview()">
-          <option value="">Select</option>
-          <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-          <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>District / State</label>
-        <input type="text" id="fdistrict" placeholder="Nashik, MH" oninput="livePreview()"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label>Known Allergies</label>
-      <input type="text" id="fallergies" placeholder="e.g. Penicillin (or None)"/>
-    </div>
-    <div class="form-group">
-      <label>Emergency Contact</label>
-      <input type="text" id="femergency" placeholder="Name — Phone number"/>
-    </div>
-    <div class="form-group">
-      <label>Current Medications</label>
-      <input type="text" id="fmeds" placeholder="e.g. Metformin 500mg (or None)"/>
-    </div>
-    <div class="form-group">
-      <label>Medical Conditions</label>
-      <textarea id="fconditions" placeholder="e.g. Diabetes Type 2 (or None)"></textarea>
-    </div>
+  </nav>
 
-    <button class="btn-generate" onclick="generateQR()">Generate Sehat ID Card + QR →</button>
-  </div>
-
-  <!-- PREVIEW -->
-  <div class="preview-side">
-    <div class="preview-card">
-      <p class="preview-title">Patient ID Card</p>
-
-      <div id="emptyState" class="empty-state">
-        <div class="empty-icon">🪪</div>
-        <p>Fill in the form to generate<br/>the patient ID card</p>
+  <!-- MAIN REGISTRATION CONTAINER -->
+  <main class="main-container">
+    
+    <!-- REGISTRATION FORM -->
+    <section class="form-side" aria-labelledby="formTitle">
+      <div class="form-header">
+        <h1 id="formTitle">
+          <span data-i18n="reg_title_main">Register</span> 
+          <em data-i18n="reg_title_accent">Patient</em>
+        </h1>
+        <p data-i18n="reg_subtitle">
+          Create an offline-first QR health identity card. Emergency vitals are accessible instantly; private notes require consent.
+        </p>
       </div>
 
-      <div id="cardSection" style="display:none">
-        <div class="success-badge">✓ Health ID Generated</div>
+      <form id="patientForm" novalidate>
+        
+        <!-- SECTION 1: BASIC DEMOGRAPHICS -->
+        <div class="form-section">
+          <div class="section-title-wrap">
+            <h2 class="section-title">
+              <span>👤</span> <span data-i18n="sec_demographics">Demographics / पहचान विवरण</span>
+            </h2>
+          </div>
 
-        <!-- THE DOWNLOADABLE CARD — everything inside this div downloads as image -->
-        <div id="sehatCard">
-          <div class="dc-stripe"></div>
-          <div class="dc-body">
-            <div class="dc-top">
-              <div>
-                <div class="dc-logo">Sehat.</div>
-                <div class="dc-type">Digital Health ID</div>
-              </div>
+          <div class="form-group" id="groupFullName">
+            <label for="fullName">
+              <span data-i18n="lbl_fullname">Full Name</span> *
+            </label>
+            <input 
+              type="text" 
+              id="fullName" 
+              name="fullName" 
+              required 
+              placeholder="e.g. Ramesh Patel" 
+              autocomplete="name"
+              aria-required="true"
+              aria-describedby="fullNameError"
+            />
+            <span id="fullNameError" class="field-error-msg" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="groupAge">
+              <label for="age">
+                <span data-i18n="lbl_age">Age</span> *
+              </label>
+              <input 
+                type="number" 
+                id="age" 
+                name="age" 
+                required 
+                min="0" 
+                max="120" 
+                placeholder="34" 
+                aria-required="true"
+                aria-describedby="ageError"
+              />
+              <span id="ageError" class="field-error-msg" role="alert" aria-live="polite"></span>
             </div>
-            <div class="dc-avatar-row">
-              <div class="dc-avatar" id="dcAvatar">?</div>
-              <div>
-                <div class="dc-patient-name" id="dcName">—</div>
-                <div class="dc-patient-id" id="dcPid">SHT-????</div>
-              </div>
+
+            <div class="form-group" id="groupGender">
+              <label for="gender">
+                <span data-i18n="lbl_gender">Gender</span> *
+              </label>
+              <select id="gender" name="gender" required aria-required="true" aria-describedby="genderError">
+                <option value="" data-i18n="opt_select">Select</option>
+                <option value="Male" data-i18n="opt_male">Male / पुरुष</option>
+                <option value="Female" data-i18n="opt_female">Female / महिला</option>
+                <option value="Other" data-i18n="opt_other">Other / अन्य</option>
+              </select>
+              <span id="genderError" class="field-error-msg" role="alert" aria-live="polite"></span>
             </div>
-            <div class="dc-fields">
-              <div class="dc-field danger"><label>Blood</label><span id="dcBlood">—</span></div>
-              <div class="dc-field"><label>Age</label><span id="dcAge">—</span></div>
-              <div class="dc-field"><label>Gender</label><span id="dcGender">—</span></div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="groupPhone">
+              <label for="phone">
+                <span data-i18n="lbl_phone">Phone Number</span> *
+              </label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                required 
+                placeholder="+91 98765 43210" 
+                autocomplete="tel"
+                aria-required="true"
+                aria-describedby="phoneError"
+              />
+              <span id="phoneError" class="field-error-msg" role="alert" aria-live="polite"></span>
             </div>
-            <div class="dc-bottom">
-              <div class="dc-info">
-                <div class="dc-info-row">
-                  <div class="dc-info-item"><label>Allergies</label><span id="dcAllergies">—</span></div>
-                  <div class="dc-info-item"><label>Emergency</label><span id="dcEmergency">—</span></div>
-                  <div class="dc-info-item"><label>District</label><span id="dcDistrict">—</span></div>
+
+            <div class="form-group" id="groupDistrict">
+              <label for="district">
+                <span data-i18n="lbl_district">District / Village</span> *
+              </label>
+              <input 
+                type="text" 
+                id="district" 
+                name="district" 
+                required 
+                placeholder="e.g. Nashik, MH" 
+                aria-required="true"
+                aria-describedby="districtError"
+              />
+              <span id="districtError" class="field-error-msg" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: 🚨 EMERGENCY MODE (ZERO-AUTH UNENCRYPTED) -->
+        <div class="form-section emergency-section">
+          <div class="section-title-wrap">
+            <h2 class="section-title">
+              <span>🚨</span> <span data-i18n="sec_emergency">Emergency Mode (Zero-Auth)</span>
+            </h2>
+            <span class="section-badge" data-i18n="badge_emergency">Immediate Offline Access</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="groupBloodGroup">
+              <label for="bloodGroup">
+                <span data-i18n="lbl_blood">Blood Group</span> *
+              </label>
+              <select id="bloodGroup" name="bloodGroup" required aria-required="true" aria-describedby="bloodGroupError">
+                <option value="" data-i18n="opt_select">Select</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+              <span id="bloodGroupError" class="field-error-msg" role="alert" aria-live="polite"></span>
+            </div>
+
+            <div class="form-group" id="groupEmergencyContact">
+              <label for="emergencyContact">
+                <span data-i18n="lbl_emergency_contact">Emergency Contact</span> *
+              </label>
+              <input 
+                type="text" 
+                id="emergencyContact" 
+                name="emergencyContact" 
+                required 
+                placeholder="Name & Phone (e.g. Brother - 9876543210)" 
+                aria-required="true"
+                aria-describedby="emergencyContactError"
+              />
+              <span id="emergencyContactError" class="field-error-msg" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="form-group" id="groupCriticalAllergies">
+            <label for="criticalAllergies">
+              <span data-i18n="lbl_allergies">Critical Allergies</span>
+              <span class="label-hint" data-i18n="hint_allergies">(e.g. Penicillin, Sulfa)</span>
+            </label>
+            <input 
+              type="text" 
+              id="criticalAllergies" 
+              name="criticalAllergies" 
+              placeholder="e.g. Penicillin (or None)" 
+              aria-describedby="criticalAllergiesError"
+            />
+            <span id="criticalAllergiesError" class="field-error-msg" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group" id="groupChronicConditions">
+            <label for="chronicConditions">
+              <span data-i18n="lbl_conditions">Chronic Medical Conditions</span>
+              <span class="label-hint" data-i18n="hint_conditions">(e.g. Diabetes, Asthma)</span>
+            </label>
+            <textarea 
+              id="chronicConditions" 
+              name="chronicConditions" 
+              rows="2" 
+              placeholder="e.g. Type 2 Diabetes, Hypertension"
+              aria-describedby="chronicConditionsError"
+            ></textarea>
+            <span id="chronicConditionsError" class="field-error-msg" role="alert" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- SECTION 3: 🔒 PRIVATE MODE (ENCRYPTED / CONSENT-REQUIRED) -->
+        <div class="form-section private-section">
+          <div class="section-title-wrap">
+            <h2 class="section-title">
+              <span>🔒</span> <span data-i18n="sec_private">Private Records (Consent Protected)</span>
+            </h2>
+            <span class="section-badge" data-i18n="badge_private">OTP Protected</span>
+          </div>
+
+          <div class="form-group" id="groupPastPrescriptions">
+            <label for="pastPrescriptions">
+              <span data-i18n="lbl_prescriptions">Past Prescriptions & Medications</span>
+              <span class="label-hint" data-i18n="hint_prescriptions">(Encrypted before storage)</span>
+            </label>
+            <textarea 
+              id="pastPrescriptions" 
+              name="pastPrescriptions" 
+              rows="2" 
+              placeholder="e.g. Metformin 500mg daily, Amlodipine 5mg"
+              aria-describedby="pastPrescriptionsError"
+            ></textarea>
+            <span id="pastPrescriptionsError" class="field-error-msg" role="alert" aria-live="polite"></span>
+          </div>
+
+          <div class="form-group" id="groupDiagnosticNotes">
+            <label for="diagnosticNotes">
+              <span data-i18n="lbl_diagnostics">Diagnostic History & Doctor Notes</span>
+              <span class="label-hint" data-i18n="hint_diagnostics">(Encrypted before storage)</span>
+            </label>
+            <textarea 
+              id="diagnosticNotes" 
+              name="diagnosticNotes" 
+              rows="2" 
+              placeholder="e.g. ECG normal (Jan 2026), HbA1c 7.1%"
+              aria-describedby="diagnosticNotesError"
+            ></textarea>
+            <span id="diagnosticNotesError" class="field-error-msg" role="alert" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- SUBMIT ACTION -->
+        <button type="submit" id="submitBtn" class="btn-submit" aria-label="Generate Sehat Card & Save Patient Record">
+          <span id="submitBtnText" data-i18n="btn_generate_card">Generate Sehat Card & Save</span>
+          <span aria-hidden="true">→</span>
+        </button>
+
+      </form>
+    </section>
+
+    <!-- PREVIEW & GENERATED CARD SECTION -->
+    <aside class="preview-side" aria-label="Card Preview">
+      <div class="preview-container">
+        <p class="preview-label" data-i18n="preview_title">Patient Health ID Card</p>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyPreview" class="empty-preview">
+          <div class="empty-icon">🪪</div>
+          <p data-i18n="empty_preview_msg">Fill out the patient details on the left to generate the offline health ID card & QR code.</p>
+        </div>
+
+        <!-- GENERATED CARD WRAPPER (Target for spring animation) -->
+        <div id="cardSection" style="display: none;">
+          <div class="sync-badge" role="status" aria-live="polite">
+            <span>✓</span>
+            <span data-i18n="badge_saved_dexie">Saved locally to IndexedDB · Sync queued</span>
+          </div>
+
+          <!-- THE PRINTABLE / DOWNLOADABLE CARD -->
+          <div id="sehatCard" aria-label="Sehat Digital Health ID Card">
+            <div class="card-stripe"></div>
+            
+            <div class="card-body">
+              <div class="card-header">
+                <div>
+                  <div class="card-brand">Sehat.</div>
+                  <div class="card-type-tag" data-i18n="card_tag">Digital Health Identity</div>
                 </div>
               </div>
-              <!-- QR IS INSIDE THE CARD -->
-              <div class="dc-qr-wrap" id="dcQr"></div>
+
+              <div class="card-avatar-row">
+                <div class="card-avatar" id="cardAvatar">?</div>
+                <div>
+                  <div class="card-name" id="cardName">—</div>
+                  <div class="card-pid" id="cardPid">SHT-????-???</div>
+                </div>
+              </div>
+
+              <!-- KEY EMERGENCY VITALS GRID -->
+              <div class="card-grid">
+                <div class="card-item danger-highlight">
+                  <label data-i18n="card_lbl_blood">Blood</label>
+                  <span id="cardBlood">—</span>
+                </div>
+                <div class="card-item">
+                  <label data-i18n="card_lbl_age">Age</label>
+                  <span id="cardAge">—</span>
+                </div>
+                <div class="card-item">
+                  <label data-i18n="card_lbl_gender">Gender</label>
+                  <span id="cardGender">—</span>
+                </div>
+              </div>
+
+              <div class="card-details-row">
+                <div class="card-vitals-col">
+                  <div class="vital-line">
+                    <label data-i18n="card_lbl_allergies">Allergies</label>
+                    <span id="cardAllergies">—</span>
+                  </div>
+                  <div class="vital-line">
+                    <label data-i18n="card_lbl_emergency">Emergency</label>
+                    <span id="cardEmergency">—</span>
+                  </div>
+                  <div class="vital-line">
+                    <label data-i18n="card_lbl_district">District</label>
+                    <span id="cardDistrict">—</span>
+                  </div>
+                </div>
+
+                <!-- QR CODE BOX (Encodes ONLY Patient ID) -->
+                <div class="card-qr-box" id="cardQrContainer">
+                  <canvas id="qrCanvas" width="74" height="74"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer-text" data-i18n="card_footer">Sehat Health · Offline Ready</span>
+              <div class="card-footer-dot"></div>
             </div>
           </div>
-          <div class="dc-footer">
-            <span class="dc-footer-text">Sehat Digital Health · ABHA Compatible</span>
-            <div class="dc-footer-dot"></div>
+
+          <!-- ACTIONS -->
+          <div class="action-buttons">
+            <button type="button" id="btnDownload" class="btn-action btn-action-primary" aria-label="Download Health ID Card as PNG">
+              <span>⬇</span>
+              <span data-i18n="btn_download_card">Download Health Card</span>
+            </button>
+            <button type="button" id="btnRegisterAnother" class="btn-action btn-action-secondary" aria-label="Register Another Patient">
+              <span data-i18n="btn_register_new">Register Another Patient</span>
+            </button>
           </div>
         </div>
-        <!-- END DOWNLOADABLE CARD -->
 
-        <div class="scan-tip">
-          <strong>📱 Scan ready!</strong> Anyone who scans the QR with their phone camera opens this patient's full health card instantly — no app needed.
-        </div>
-
-        <div class="btn-row">
-          <button class="btn-sm btn-dl" onclick="downloadCard()">⬇ Download Full Card</button>
-          <button class="btn-sm btn-ghost" onclick="testScan()">Test Scan →</button>
-        </div>
       </div>
-    </div>
-  </div>
-</div>
+    </aside>
 
-<p class="page-credit">Made by Rudra Pratap singh</p>
+  </main>
 
-<script>
-let currentId='';
-let currentURL='';
-
-function getInitials(n){return(n||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
-
-function generatePatientId(){
-  const d=document.getElementById('fdistrict').value.trim().toUpperCase().replace(/[^A-Z]/g,'').slice(0,2)||'IN';
-  return `SHT-${new Date().getFullYear()}-${d}-${Math.floor(10000+Math.random()*90000)}`;
-}
-
-function livePreview(){
-  const name=document.getElementById('fname').value.trim();
-  if(!name){
-    document.getElementById('emptyState').style.display='block';
-    document.getElementById('cardSection').style.display='none';
-    return;
-  }
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('cardSection').style.display='block';
-  document.getElementById('dcAvatar').textContent=getInitials(name);
-  document.getElementById('dcName').textContent=name.length>20?name.slice(0,19)+'…':name;
-  document.getElementById('dcBlood').textContent=document.getElementById('fblood').value||'—';
-  document.getElementById('dcAge').textContent=document.getElementById('fage').value||'—';
-  document.getElementById('dcGender').textContent=document.getElementById('fgender').value||'—';
-  document.getElementById('dcDistrict').textContent=(document.getElementById('fdistrict').value||'—').slice(0,14);
-  document.getElementById('dcAllergies').textContent=(document.getElementById('fallergies').value||'None').slice(0,20);
-  document.getElementById('dcEmergency').textContent=(document.getElementById('femergency').value||'Not provided').slice(0,22);
-  document.getElementById('dcPid').textContent=currentId||'SHT-????';
-}
-
-function generateQR(){
-  const name=document.getElementById('fname').value.trim();
-  if(!name){alert('Please enter patient name.');return;}
-
-  currentId=generatePatientId();
-
-  const allergies=document.getElementById('fallergies').value.trim()||'None';
-  const emergency=document.getElementById('femergency').value.trim()||'Not provided';
-  const meds=document.getElementById('fmeds').value.trim()||'None';
-  const conditions=document.getElementById('fconditions').value.trim()||'None';
-  const age=document.getElementById('fage').value||'';
-  const gender=document.getElementById('fgender').value||'';
-  const blood=document.getElementById('fblood').value||'';
-  const district=document.getElementById('fdistrict').value.trim()||'';
-
-  const params=new URLSearchParams({
-    id:currentId,name,age,gender,blood,district,
-    allergies,emergency,meds,conditions,
-    date:new Date().toLocaleDateString('en-IN')
-  });
-
-  const base=window.location.href.replace('register.html','');
-  currentURL=`${base}scan.html?${params.toString()}`;
-
-  // Update card fields
-  document.getElementById('dcPid').textContent=currentId;
-  document.getElementById('dcAvatar').textContent=getInitials(name);
-  document.getElementById('dcName').textContent=name.length>20?name.slice(0,19)+'…':name;
-  document.getElementById('dcBlood').textContent=blood||'—';
-  document.getElementById('dcAge').textContent=age||'—';
-  document.getElementById('dcGender').textContent=gender||'—';
-  document.getElementById('dcDistrict').textContent=(district||'—').slice(0,14);
-  document.getElementById('dcAllergies').textContent=(allergies||'None').slice(0,20);
-  document.getElementById('dcEmergency').textContent=(emergency||'Not provided').slice(0,22);
-
-  // Generate QR INSIDE the card
-  document.getElementById('dcQr').innerHTML='';
-  new QRCode(document.getElementById('dcQr'),{
-    text:currentURL,
-    width:62,height:62,
-    colorDark:'#000000',colorLight:'#ffffff',
-    correctLevel:QRCode.CorrectLevel.M
-  });
-
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('cardSection').style.display='block';
-
-  // Save to localStorage
-  const pts=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
-  pts[currentId]={id:currentId,name,age,gender,blood,district,allergies,emergency,meds,conditions,date:new Date().toLocaleDateString('en-IN')};
-  localStorage.setItem('sehat_patients',JSON.stringify(pts));
-}
-
-function downloadCard(){
-  const card=document.getElementById('sehatCard');
-  html2canvas(card,{
-    scale:3,
-    backgroundColor:'#ffffff',
-    useCORS:true,
-    logging:false
-  }).then(canvas=>{
-    const link=document.createElement('a');
-    link.download=`Sehat-ID-${currentId||'card'}.png`;
-    link.href=canvas.toDataURL('image/png');
-    link.click();
-  });
-}
-
-function testScan(){
-  if(currentURL)window.open(currentURL,'_blank');
-  else alert('Please generate QR first.');
-}
-</script>
+  <script type="module" src="/register.js"></script>
 </body>
 </html>

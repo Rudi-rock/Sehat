@@ -2,76 +2,329 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sehat — Patient Health Card</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+<title>Sehat — Scan Patient Health Card</title>
+<meta name="description" content="Instant zero-auth emergency medical vitals lookup and patient health identity scanner for rural health clinics."/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--red:#e05252}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 2rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
-.nav-brand{display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap}
-.logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);text-decoration:none}
-.nav-credit{padding:0.32rem 0.78rem;border:1px solid rgba(0,201,122,0.2);border-radius:999px;background:rgba(0,201,122,0.08);font-size:0.72rem;font-weight:600;color:var(--white);white-space:nowrap}
-.nav-links{display:flex;gap:1.5rem}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
-.nav-links a:hover{color:var(--green)}
 
-.main{max-width:600px;margin:0 auto;padding:2rem 1.5rem}
+:root {
+  /* TYPOGRAPHY */
+  --font-primary: 'Syne', sans-serif;
+  --font-secondary: 'DM Sans', -apple-system, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
 
-.emergency-banner{background:linear-gradient(135deg,#1f0606,#120404);border:1px solid #5a1212;border-radius:16px;padding:1rem 1.5rem;display:flex;align-items:center;gap:0.8rem;margin-bottom:1.5rem}
-.e-dot{width:10px;height:10px;border-radius:50%;background:var(--red);animation:blink 1s infinite;flex-shrink:0}
+  /* COLOR */
+  --color-surface-base: #070d0a;
+  --color-surface-muted: #edf5f0;
+  --color-surface-raised: #101e16;
+  --color-surface-strong: #004d2e;
+  --color-accent-primary: #00c97a;
+  --color-text-primary: #edf5f0;
+  --color-text-secondary: #4a6a5a;
+  --color-text-inverse: #141414;
+  --color-status-error: #ff5c5c;
+  --color-status-success: #00c97a;
+  --color-status-warning: #ffb84d;
+
+  /* SPACING */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; 
+  --space-4: 16px; --space-5: 24px; --space-6: 40px;
+
+  /* RADIUS / SHADOW / MOTION */
+  --radius-xs: 6px; --radius-sm: 12px; --radius-md: 16px; --radius-full: 999px;
+  --shadow-card: 0 24px 48px rgba(0,0,0,0.7);
+  --shadow-glow: 0 0 40px rgba(0,201,122,0.12);
+  --shadow-focus: 0 0 0 3px rgba(0,201,122,0.5);
+  --motion-instant: 150ms;
+  --motion-fast: 400ms;
+  --motion-scene: 600ms;
+
+  /* BACKWARD COMPATIBILITY ALIASES */
+  --bg: var(--color-surface-base);
+  --green: var(--color-accent-primary);
+  --green-dim: var(--color-surface-strong);
+  --white: var(--color-text-primary);
+  --muted: var(--color-text-secondary);
+  --cb: var(--color-surface-raised);
+  --cborder: #1a2e22;
+  --red: var(--color-status-error);
+}
+
+body{
+  background: var(--color-surface-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-md);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAVBAR */
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(7,13,10,0.95);
+  border-bottom: 1px solid var(--cborder);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  backdrop-filter: blur(8px);
+}
+.nav-brand{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+.logo{
+  font-family: var(--font-primary);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-1);
+}
+.logo:focus-visible{
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-xs);
+}
+
+.nav-credit{
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid rgba(0,201,122,0.2);
+  border-radius: var(--radius-full);
+  background: rgba(0,201,122,0.08);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.nav-links{display:flex;gap:var(--space-3)}
+.nav-links a{
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-xs);
+  transition: color var(--motion-instant);
+}
+.nav-links a:hover{color:var(--color-accent-primary)}
+.nav-links a:focus-visible{
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.nav-links a:active{transform:translateY(1px)}
+
+.main{max-width:600px;margin:0 auto;padding:var(--space-5) var(--space-4)}
+
+/* EMERGENCY BANNER (Double border for grayscale distinction) */
+.emergency-banner{
+  background: linear-gradient(135deg, rgba(255,92,92,0.12) 0%, rgba(31,6,6,0.95) 100%);
+  border: 2px solid var(--color-status-error);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  box-shadow: 0 0 24px rgba(255,92,92,0.15);
+}
+.e-dot{
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-status-error);
+  animation: blink 1s infinite;
+  flex-shrink: 0;
+}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
-.e-banner-text{font-size:0.8rem;color:#f08080;line-height:1.4}
-.e-banner-text strong{color:var(--red);font-weight:700}
+.e-banner-text{font-size:var(--font-size-sm);color:#fca5a5;line-height:1.4}
+.e-banner-text strong{color:#ff9999;font-weight:700}
 
-.id-card-large{width:100%;border-radius:20px;background:linear-gradient(135deg,#0d2419,#071509);border:1px solid var(--green-dim);position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,201,122,0.15),0 20px 50px rgba(0,0,0,0.6);margin-bottom:1.5rem;padding:1.5rem}
-.card-top-stripe{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
-.card-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
-.card-logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--green);position:absolute;top:14px;right:16px}
-.big-avatar{width:60px;height:60px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--green);flex-shrink:0}
-.card-name-block .patient-full-name{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--white)}
-.card-name-block .patient-id{font-size:0.65rem;color:var(--muted);font-family:monospace;margin-top:3px}
-.card-name-block .patient-meta{font-size:0.8rem;color:var(--muted);margin-top:3px}
+/* ID CARD LARGE */
+.id-card-large{
+  width: 100%;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg,#0d2419,#071509);
+  border: 1px solid var(--green-dim);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-glow), var(--shadow-card);
+  margin-bottom: var(--space-5);
+  padding: var(--space-5);
+}
+.card-top-stripe{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--color-accent-primary),transparent)}
+.card-header{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-5)}
+.card-logo-text{font-family:var(--font-primary);font-weight:800;font-size:1rem;color:var(--color-accent-primary);position:absolute;top:14px;right:16px}
+.big-avatar{
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-strong);
+  border: 2px solid var(--color-accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-primary);
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+.card-name-block .patient-full-name{font-family:var(--font-primary);font-size:1.3rem;font-weight:800;color:var(--color-text-primary)}
+.card-name-block .patient-id{font-size:var(--font-size-xs);color:var(--color-text-secondary);font-family:monospace;margin-top:3px}
+.card-name-block .patient-meta{font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-top:3px}
 
-.critical-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem}
-.c-block{background:rgba(0,0,0,0.3);border-radius:12px;padding:1rem}
+.critical-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-4)}
+.c-block{background:rgba(0,0,0,0.3);border-radius:var(--radius-sm);padding:var(--space-4);border:1px solid rgba(255,255,255,0.05)}
 .c-block.full{grid-column:span 2}
-.c-block.danger{background:rgba(224,82,82,0.08);border:1px solid rgba(224,82,82,0.15)}
-.c-block.safe{background:rgba(0,201,122,0.06);border:1px solid rgba(0,201,122,0.1)}
-.c-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.4rem}
-.c-value{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--white)}
-.c-value.red{color:var(--red)}
-.c-value.green{color:var(--green)}
-.c-value.normal{font-size:0.9rem;font-weight:500;font-family:'DM Sans',sans-serif}
+.c-block.danger{background:rgba(255,92,92,0.08);border:1px solid rgba(255,92,92,0.25)}
+.c-block.safe{background:rgba(0,201,122,0.06);border:1px solid rgba(0,201,122,0.2)}
+.c-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--color-text-secondary);margin-bottom:var(--space-1)}
+.c-value{font-family:var(--font-primary);font-weight:700;font-size:1.1rem;color:var(--color-text-primary)}
+.c-value.red{color:var(--color-status-error)}
+.c-value.green{color:var(--color-accent-primary)}
+.c-value.normal{font-size:var(--font-size-sm);font-weight:500;font-family:var(--font-secondary)}
 
-.more-section{background:var(--cb);border:1px solid var(--cborder);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
-.more-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1rem}
-.more-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
-.m-item{border-bottom:1px solid var(--cborder);padding-bottom:0.7rem}
+.more-section{background:var(--color-surface-raised);border:1px solid var(--cborder);border-radius:var(--radius-md);padding:var(--space-5);margin-bottom:var(--space-5)}
+.more-title{font-family:var(--font-primary);font-weight:700;font-size:var(--font-size-sm);color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:var(--space-4)}
+.more-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
+.m-item{border-bottom:1px solid var(--cborder);padding-bottom:var(--space-2)}
 .m-item.full{grid-column:span 2}
-.m-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.3rem}
-.m-value{font-size:0.88rem;color:var(--white);font-weight:500;line-height:1.4}
+.m-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--color-text-secondary);margin-bottom:var(--space-1)}
+.m-value{font-size:var(--font-size-sm);color:var(--color-text-primary);font-weight:500;line-height:1.4}
 
-.no-data{text-align:center;padding:4rem 2rem}
-.no-data-icon{font-size:3rem;margin-bottom:1rem;opacity:0.4}
-.no-data h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:0.5rem}
-.no-data p{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem}
-.manual-section{background:var(--cb);border:1px solid var(--cborder);border-radius:16px;padding:1.5rem;text-align:left}
-.manual-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.7rem;display:block}
-.manual-row{display:flex;gap:0.8rem}
-.manual-input{flex:1;background:#0d1a12;border:1px solid var(--cborder);border-radius:10px;padding:0.7rem 1rem;color:var(--white);font-family:monospace;font-size:0.85rem;outline:none;transition:border-color 0.2s}
-.manual-input:focus{border-color:var(--green)}
-.btn-lookup{background:var(--green);color:#000;border:none;border-radius:10px;padding:0.7rem 1.2rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer}
+.no-data{text-align:center;padding:var(--space-6) var(--space-4)}
+.no-data-icon{font-size:3rem;margin-bottom:var(--space-4);opacity:0.4}
+.no-data h2{font-family:var(--font-primary);font-size:var(--font-size-xl);font-weight:800;margin-bottom:var(--space-2)}
+.no-data p{color:var(--color-text-secondary);font-size:var(--font-size-md);margin-bottom:var(--space-5)}
+.manual-section{background:var(--color-surface-raised);border:1px solid var(--cborder);border-radius:var(--radius-md);padding:var(--space-5);text-align:left}
+.manual-label{font-size:var(--font-size-sm);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--color-text-primary);margin-bottom:var(--space-2);display:block}
+.manual-row{display:flex;gap:var(--space-3);align-items:stretch}
 
-.action-bar{display:flex;gap:0.8rem;flex-wrap:wrap}
-.btn-action{flex:1;min-width:120px;padding:0.8rem;border-radius:12px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;border:none;transition:all 0.2s;text-align:center;text-decoration:none;display:block}
-.btn-green{background:var(--green);color:#000}
-.btn-green:hover{opacity:0.85}
-.btn-outline{background:transparent;border:1px solid var(--cborder)!important;color:var(--muted)}
-.btn-outline:hover{border-color:var(--green)!important;color:var(--green)}
+/* MANUAL INPUT (7 STATES) */
+.manual-input{
+  flex: 1;
+  min-height: 48px;
+  background: var(--color-surface-base);
+  border: 1px solid var(--cborder);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-primary);
+  font-family: monospace;
+  font-size: var(--font-size-md);
+  outline: none;
+  transition: all var(--motion-instant) ease;
+}
+.manual-input:hover{border-color:var(--color-text-secondary)}
+.manual-input:focus-visible{
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: var(--shadow-focus);
+}
+.manual-input:disabled{opacity:0.4;cursor:not-allowed}
+.manual-input[aria-invalid="true"]{
+  border-color: var(--color-status-error) !important;
+  box-shadow: 0 0 0 2px rgba(255,92,92,0.25) !important;
+}
 
-.reg-tag{font-size:0.65rem;color:var(--muted);text-align:center;margin-top:0.8rem}
+/* LOOKUP BUTTON (7 STATES) */
+.btn-lookup{
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-sm);
+  min-height: 48px;
+  min-width: 130px;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--motion-instant) ease;
+  position: relative;
+}
+.btn-lookup:hover{background:#00df88;transform:translateY(-1px)}
+.btn-lookup:focus-visible{
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.btn-lookup:active{transform:translateY(1px)}
+.btn-lookup:disabled{opacity:0.4;cursor:not-allowed}
+
+.btn-lookup.is-loading,
+.btn-lookup[aria-busy="true"]{
+  color: transparent !important;
+  pointer-events: none;
+}
+.btn-lookup.is-loading::after,
+.btn-lookup[aria-busy="true"]::after{
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  margin-left: -9px;
+  border: 2px solid rgba(0,0,0,0.25);
+  border-top-color: var(--color-text-inverse);
+  border-radius: var(--radius-full);
+  animation: btnSpinner 600ms linear infinite;
+}
+
+@keyframes btnSpinner{to{transform:rotate(360deg)}}
+
+.action-bar{display:flex;gap:var(--space-3);flex-wrap:wrap}
+.btn-action{
+  flex: 1;
+  min-width: 140px;
+  min-height: 48px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  border: none;
+  transition: all var(--motion-instant) ease;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-green{background:var(--color-accent-primary);color:var(--color-text-inverse)}
+.btn-green:hover{background:#00df88;transform:translateY(-1px)}
+.btn-green:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn-green:active{transform:translateY(1px)}
+
+.btn-outline{background:transparent;border:1px solid var(--cborder)!important;color:var(--color-text-primary)}
+.btn-outline:hover{border-color:var(--color-accent-primary)!important;color:var(--color-accent-primary);background:rgba(0,201,122,0.08)}
+.btn-outline:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn-outline:active{transform:translateY(1px)}
+
+.reg-tag{font-size:var(--font-size-xs);color:var(--color-text-secondary);text-align:center;margin-top:var(--space-4)}
 
 @media(max-width:500px){
   .nav-credit{font-size:0.68rem;padding:0.3rem 0.7rem}
@@ -79,24 +332,25 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;paddi
   .c-block.full{grid-column:span 1}
   .more-grid{grid-template-columns:1fr}
   .m-item.full{grid-column:span 1}
+  .manual-row{flex-direction:column}
 }
 </style>
 </head>
 <body>
-<nav>
+<nav aria-label="Main Navigation">
   <div class="nav-brand">
-    <a href="index.html" class="logo">Sehat.</a>
+    <a href="index.html" class="logo" aria-label="Sehat Home">Sehat.</a>
     <span class="nav-credit">Made by Rudra Pratap singh</span>
   </div>
   <div class="nav-links">
-    <a href="register.html">Register</a>
-    <a href="dashboard.html">Dashboard</a>
+    <a href="register.html">Register Patient</a>
+    <a href="dashboard.html">Patient Dashboard</a>
   </div>
 </nav>
 
-<div class="main" id="mainContent">
-  <!-- Filled by JS -->
-</div>
+<main class="main" id="mainContent">
+  <!-- Dynamic Patient Card or Lookup State -->
+</main>
 
 <script>
 function getInitials(n){return(n||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
@@ -110,19 +364,19 @@ function renderCard(p){
   const hasConditions=!isEmpty(p.conditions)&&p.conditions.toLowerCase()!=='none';
 
   main.innerHTML=`
-    <div class="emergency-banner">
+    <div class="emergency-banner" role="alert" aria-live="polite">
       <div class="e-dot"></div>
-      <div class="e-banner-text"><strong>Emergency Access Active</strong> — All critical medical data is shown below. No authentication required.</div>
+      <div class="e-banner-text"><strong>Emergency Access Active</strong> — All critical medical vitals are displayed below with zero-auth friction.</div>
     </div>
 
-    <div class="id-card-large">
+    <div class="id-card-large" aria-label="Patient Emergency Health Card">
       <div class="card-top-stripe"></div>
       <div class="card-logo-text">Sehat.</div>
 
       <div class="card-header">
-        <div class="big-avatar">${getInitials(p.name)}</div>
+        <div class="big-avatar" aria-hidden="true">${getInitials(p.name)}</div>
         <div class="card-name-block">
-          <div class="patient-full-name">${p.name||'Unknown'}</div>
+          <h1 class="patient-full-name">${p.name||'Unknown Patient'}</h1>
           <div class="patient-id">${p.id||'SHT-UNKNOWN'}</div>
           <div class="patient-meta">${p.age?p.age+' yrs':''} ${p.gender?'· '+p.gender:''} ${p.district?'· '+p.district:''}</div>
         </div>
@@ -138,15 +392,15 @@ function renderCard(p){
           <div class="c-value">${p.age?p.age+' yrs':'Unknown'}</div>
         </div>
         <div class="c-block full ${hasAllergy?'danger':''}">
-          <div class="c-label">⚠ Known Allergies</div>
+          <div class="c-label">⚠ Known Critical Allergies</div>
           <div class="c-value ${hasAllergy?'red':'normal'}">${p.allergies||'None known'}</div>
         </div>
-        <div class="c-block full ${hasMeds?'':''}">
+        <div class="c-block full">
           <div class="c-label">💊 Current Medications</div>
           <div class="c-value normal">${p.meds||'None'}</div>
         </div>
         <div class="c-block full ${hasConditions?'danger':''}">
-          <div class="c-label">🏥 Medical Conditions</div>
+          <div class="c-label">🏥 Chronic Conditions</div>
           <div class="c-value normal">${p.conditions||'None'}</div>
         </div>
         <div class="c-block full safe">
@@ -157,7 +411,7 @@ function renderCard(p){
     </div>
 
     <div class="more-section">
-      <div class="more-title">Full Patient Record</div>
+      <div class="more-title">Full Patient Demographics</div>
       <div class="more-grid">
         <div class="m-item"><div class="m-label">Full Name</div><div class="m-value">${p.name||'—'}</div></div>
         <div class="m-item"><div class="m-label">Gender</div><div class="m-value">${p.gender||'—'}</div></div>
@@ -175,13 +429,13 @@ function renderCard(p){
 
     <div class="action-bar">
       <a href="register.html" class="btn-action btn-outline">+ Register New Patient</a>
-      <a href="dashboard.html" class="btn-action btn-green">Open Dashboard →</a>
+      <a href="dashboard.html" class="btn-action btn-green">Open Patient Dashboard →</a>
     </div>
     <p class="reg-tag">Powered by Sehat Digital Health · ABHA Compatible · Made by Rudra Pratap singh</p>
   `;
 
   const logs=JSON.parse(localStorage.getItem('sehat_access_logs')||'[]');
-  logs.push({patientId:p.id,type:'Emergency (QR Scan)',time:new Date().toLocaleString('en-IN'),accessor:'Doctor (QR Scan)'});
+  logs.push({patientId:p.id,type:'Emergency (QR Scan)',time:new Date().toLocaleString('en-IN'),accessor:'Doctor (Emergency Scan)'});
   localStorage.setItem('sehat_access_logs',JSON.stringify(logs));
 }
 
@@ -189,24 +443,57 @@ function renderNoData(){
   document.getElementById('mainContent').innerHTML=`
     <div class="no-data">
       <div class="no-data-icon">🪪</div>
-      <h2>No Patient Data Found</h2>
-      <p>This QR code doesn't contain patient data, or it may be invalid. Enter a Sehat ID manually below.</p>
-      <div class="manual-section">
-        <span class="manual-label">Enter Sehat Health ID</span>
+      <h2>Lookup Patient Health Card</h2>
+      <p>Scan a Sehat QR code or enter a Patient Health ID manually to retrieve emergency health records.</p>
+      <form class="manual-section" onsubmit="event.preventDefault(); lookupManual();">
+        <label for="manualId" class="manual-label">Enter Sehat Health ID</label>
         <div class="manual-row">
-          <input type="text" class="manual-input" id="manualId" placeholder="SHT-2024-MH-XXXXX" oninput="this.value=this.value.toUpperCase()"/>
-          <button class="btn-lookup" onclick="lookupManual()">Look up →</button>
+          <input 
+            type="text" 
+            class="manual-input" 
+            id="manualId" 
+            placeholder="SHT-2024-MH-XXXXX" 
+            autocomplete="off"
+            aria-required="true"
+            oninput="this.value=this.value.toUpperCase()"
+          />
+          <button type="submit" id="btnLookup" class="btn-lookup" aria-label="Look up Patient Record">
+            Look up Record →
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   `;
 }
 
 function lookupManual(){
-  const id=document.getElementById('manualId').value.trim().toUpperCase();
-  const pts=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
-  if(pts[id]){renderCard(pts[id]);}
-  else{alert('Patient not found. Please register first.');}
+  const input=document.getElementById('manualId');
+  const btn=document.getElementById('btnLookup');
+  const id=input?.value.trim().toUpperCase();
+
+  if(!id){
+    if(input) input.setAttribute('aria-invalid','true');
+    return;
+  }
+
+  if(btn){
+    btn.classList.add('is-loading');
+    btn.setAttribute('aria-busy','true');
+  }
+
+  setTimeout(()=>{
+    const pts=JSON.parse(localStorage.getItem('sehat_patients')||'{}');
+    if(pts[id]){
+      renderCard(pts[id]);
+    } else {
+      if(input) input.setAttribute('aria-invalid','true');
+      alert(`Patient ID "${id}" was not found in local records. Please check the ID or register the patient first.`);
+      if(btn){
+        btn.classList.remove('is-loading');
+        btn.removeAttribute('aria-busy');
+      }
+    }
+  }, 350);
 }
 
 const params=new URLSearchParams(window.location.search);

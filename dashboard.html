@@ -2,122 +2,340 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sehat — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+<title>Sehat — Patient Dashboard & Audit Logs</title>
+<meta name="description" content="View registered patients, access audit logs, and inspect emergency health records across rural health centers."/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070d0a;--green:#00c97a;--green-dim:#004d2e;--white:#edf5f0;--muted:#4a6a5a;--cb:#101e16;--cborder:#1a2e22;--red:#e05252}
-body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh}
-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 3rem;background:rgba(7,13,10,0.95);border-bottom:1px solid var(--cborder);position:sticky;top:0;z-index:99}
-.nav-brand{display:flex;align-items:center;gap:0.9rem;flex-wrap:wrap}
-.logo{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--green);text-decoration:none}
-.nav-credit{padding:0.32rem 0.78rem;border:1px solid rgba(0,201,122,0.2);border-radius:999px;background:rgba(0,201,122,0.08);font-size:0.72rem;font-weight:600;color:var(--white);white-space:nowrap}
-.nav-links{display:flex;gap:1.5rem}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
-.nav-links a:hover,.nav-links a.active{color:var(--green)}
 
-.main{max-width:1000px;margin:0 auto;padding:3rem 2rem}
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2.5rem;gap:1rem;flex-wrap:wrap}
-.page-header h1{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-1px}
-.page-header h1 em{color:var(--green);font-style:normal}
-.page-header p{color:var(--muted);font-size:0.85rem;margin-top:0.3rem}
-.btn-primary{background:var(--green);color:#000;border:none;border-radius:100px;padding:0.6rem 1.4rem;font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;text-decoration:none;display:inline-block;transition:opacity 0.2s}
-.btn-primary:hover{opacity:0.85}
+:root {
+  /* TYPOGRAPHY */
+  --font-primary: 'Syne', sans-serif;
+  --font-secondary: 'DM Sans', -apple-system, sans-serif;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+
+  /* COLOR */
+  --color-surface-base: #070d0a;
+  --color-surface-muted: #edf5f0;
+  --color-surface-raised: #101e16;
+  --color-surface-strong: #004d2e;
+  --color-accent-primary: #00c97a;
+  --color-text-primary: #edf5f0;
+  --color-text-secondary: #4a6a5a;
+  --color-text-inverse: #141414;
+  --color-status-error: #ff5c5c;
+  --color-status-success: #00c97a;
+  --color-status-warning: #ffb84d;
+
+  /* SPACING */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; 
+  --space-4: 16px; --space-5: 24px; --space-6: 40px;
+
+  /* RADIUS / SHADOW / MOTION */
+  --radius-xs: 6px; --radius-sm: 12px; --radius-md: 16px; --radius-full: 999px;
+  --shadow-card: 0 24px 48px rgba(0,0,0,0.7);
+  --shadow-glow: 0 0 40px rgba(0,201,122,0.12);
+  --shadow-focus: 0 0 0 3px rgba(0,201,122,0.5);
+  --motion-instant: 150ms;
+  --motion-fast: 400ms;
+  --motion-scene: 600ms;
+
+  /* BACKWARD COMPATIBILITY ALIASES */
+  --bg: var(--color-surface-base);
+  --green: var(--color-accent-primary);
+  --green-dim: var(--color-surface-strong);
+  --white: var(--color-text-primary);
+  --muted: var(--color-text-secondary);
+  --cb: var(--color-surface-raised);
+  --cborder: #1a2e22;
+  --red: var(--color-status-error);
+}
+
+body{
+  background: var(--color-surface-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-md);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAVBAR */
+nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  background: rgba(7,13,10,0.95);
+  border-bottom: 1px solid var(--cborder);
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  backdrop-filter: blur(8px);
+}
+.nav-brand{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+.logo{
+  font-family: var(--font-primary);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-1);
+}
+.logo:focus-visible{
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-xs);
+}
+.nav-credit{
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid rgba(0,201,122,0.2);
+  border-radius: var(--radius-full);
+  background: rgba(0,201,122,0.08);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.nav-links{display:flex;gap:var(--space-3)}
+.nav-links a{
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-xs);
+  transition: color var(--motion-instant);
+}
+.nav-links a:hover, .nav-links a.active{color:var(--color-accent-primary)}
+.nav-links a:focus-visible{
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+.nav-links a:active{transform:translateY(1px)}
+
+.main{max-width:1000px;margin:0 auto;padding:var(--space-6) var(--space-5)}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-5);gap:var(--space-4);flex-wrap:wrap}
+.page-header h1{font-family:var(--font-primary);font-size:var(--font-size-xl);font-weight:800;letter-spacing:-1px}
+.page-header h1 em{color:var(--color-accent-primary);font-style:normal}
+.page-header p{color:var(--color-text-secondary);font-size:var(--font-size-sm);margin-top:var(--space-1)}
+
+.btn-primary{
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  border: none;
+  border-radius: var(--radius-full);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--motion-instant);
+}
+.btn-primary:hover{background:#00df88;transform:translateY(-1px)}
+.btn-primary:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn-primary:active{transform:translateY(1px)}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
-.stat-card{background:var(--cb);border:1px solid var(--cborder);border-radius:14px;padding:1.2rem 1.5rem}
-.stat-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--green);letter-spacing:-1px}
-.stat-lbl{font-size:0.7rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-top:0.2rem}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:var(--space-5)}
+.stat-card{background:var(--color-surface-raised);border:1px solid var(--cborder);border-radius:var(--radius-sm);padding:var(--space-4) var(--space-5)}
+.stat-num{font-family:var(--font-primary);font-size:1.8rem;font-weight:800;color:var(--color-accent-primary);letter-spacing:-1px}
+.stat-lbl{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--color-text-secondary);margin-top:var(--space-1)}
 
-/* TABS */
-.tabs{display:flex;gap:0;border:1px solid var(--cborder);border-radius:12px;overflow:hidden;margin-bottom:2rem;width:fit-content}
-.tab{padding:0.65rem 1.4rem;font-size:0.85rem;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
-.tab.active{background:var(--green);color:#000;font-weight:700}
-.tab:hover:not(.active){color:var(--white)}
+/* TABS (7 STATES) */
+.tabs{display:flex;gap:0;border:1px solid var(--cborder);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:var(--space-5);width:fit-content}
+.tab{
+  min-height: 44px;
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all var(--motion-instant);
+  font-family: var(--font-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tab:hover:not(.active){color:var(--color-text-primary);background:rgba(255,255,255,0.03)}
+.tab:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.tab.active{background:var(--color-accent-primary);color:var(--color-text-inverse);font-weight:700}
+.tab:active{transform:translateY(1px)}
 
 /* PATIENT LIST */
-.patient-list{display:flex;flex-direction:column;gap:1rem}
-.patient-row{background:var(--cb);border:1px solid var(--cborder);border-radius:14px;padding:1.2rem 1.5rem;display:flex;align-items:center;gap:1.2rem;transition:border-color 0.2s;cursor:pointer}
-.patient-row:hover{border-color:var(--green)}
-.p-avatar{width:44px;height:44px;border-radius:50%;background:var(--green-dim);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--green);flex-shrink:0}
+.patient-list{display:flex;flex-direction:column;gap:var(--space-4)}
+.patient-row{
+  background: var(--color-surface-raised);
+  border: 1px solid var(--cborder);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: border-color var(--motion-instant);
+  cursor: pointer;
+}
+.patient-row:hover{border-color:var(--color-accent-primary)}
+.patient-row:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.p-avatar{
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-strong);
+  border: 1.5px solid var(--color-accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-primary);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
 .p-info{flex:1}
-.p-name{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem}
-.p-meta{font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace}
-.p-tags{display:flex;gap:0.5rem;margin-top:0.4rem;flex-wrap:wrap}
-.p-tag{background:rgba(0,201,122,0.08);border:1px solid rgba(0,201,122,0.15);color:var(--green);padding:0.2rem 0.6rem;border-radius:100px;font-size:0.65rem;font-weight:600}
-.p-tag.red{background:rgba(224,82,82,0.08);border-color:rgba(224,82,82,0.15);color:var(--red)}
-.p-actions{display:flex;gap:0.6rem}
-.btn-xs{padding:0.45rem 0.9rem;border-radius:100px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none}
-.btn-xs-green{background:var(--green);color:#000}
-.btn-xs-ghost{background:transparent;border:1px solid var(--cborder)!important;color:var(--muted)}
-.btn-xs-ghost:hover{border-color:var(--green)!important;color:var(--green)}
+.p-name{font-family:var(--font-primary);font-weight:700;font-size:var(--font-size-md)}
+.p-meta{font-size:var(--font-size-xs);color:var(--color-text-secondary);margin-top:2px;font-family:monospace}
+.p-tags{display:flex;gap:var(--space-2);margin-top:var(--space-2);flex-wrap:wrap}
+.p-tag{
+  background: rgba(0,201,122,0.08);
+  border: 1px solid rgba(0,201,122,0.2);
+  color: var(--color-accent-primary);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+.p-tag.red{background:rgba(255,92,92,0.08);border-color:rgba(255,92,92,0.25);color:var(--color-status-error)}
+
+.p-actions{display:flex;gap:var(--space-2)}
+.btn-xs{
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-secondary);
+  transition: all var(--motion-instant);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-xs-green{background:var(--color-accent-primary);color:var(--color-text-inverse)}
+.btn-xs-green:hover{background:#00df88;transform:translateY(-1px)}
+.btn-xs-green:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn-xs-green:active{transform:translateY(1px)}
+
+.btn-xs-ghost{background:transparent;border:1px solid var(--cborder)!important;color:var(--color-text-primary)}
+.btn-xs-ghost:hover{border-color:var(--color-accent-primary)!important;color:var(--color-accent-primary);background:rgba(0,201,122,0.08)}
+.btn-xs-ghost:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+.btn-xs-ghost:active{transform:translateY(1px)}
 
 /* AUDIT LOGS */
-.audit-list{display:flex;flex-direction:column;gap:0.6rem}
-.audit-row{background:var(--cb);border:1px solid var(--cborder);border-radius:10px;padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem}
-.audit-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.audit-dot.emergency{background:var(--red)}
-.audit-dot.full{background:var(--green)}
+.audit-list{display:flex;flex-direction:column;gap:var(--space-3)}
+.audit-row{background:var(--color-surface-raised);border:1px solid var(--cborder);border-radius:var(--radius-xs);padding:var(--space-3) var(--space-4);display:flex;align-items:center;gap:var(--space-3)}
+.audit-dot{width:10px;height:10px;border-radius:var(--radius-full);flex-shrink:0}
+.audit-dot.emergency{background:var(--color-status-error)}
+.audit-dot.full{background:var(--color-accent-primary)}
 .audit-info{flex:1}
-.audit-type{font-size:0.85rem;font-weight:500}
-.audit-meta{font-size:0.75rem;color:var(--muted);margin-top:2px;font-family:monospace}
-.audit-time{font-size:0.75rem;color:var(--muted);white-space:nowrap}
+.audit-type{font-size:var(--font-size-sm);font-weight:600}
+.audit-meta{font-size:var(--font-size-xs);color:var(--color-text-secondary);margin-top:2px;font-family:monospace}
+.audit-time{font-size:var(--font-size-xs);color:var(--color-text-secondary);white-space:nowrap}
 
 /* EMPTY */
-.empty{text-align:center;padding:3rem;color:var(--muted)}
-.empty-icon{font-size:2.5rem;margin-bottom:0.8rem;opacity:0.4}
-.empty p{font-size:0.9rem;margin-bottom:1rem}
+.empty{text-align:center;padding:var(--space-6);color:var(--color-text-secondary)}
+.empty-icon{font-size:2.5rem;margin-bottom:var(--space-3);opacity:0.4}
+.empty p{font-size:var(--font-size-md);margin-bottom:var(--space-4)}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:var(--space-4)}
 .modal-overlay.open{display:flex}
-.modal{background:var(--cb);border:1px solid var(--cborder);border-radius:20px;padding:2rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
-.modal-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem}
-.modal-close{background:transparent;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;transition:color 0.2s}
-.modal-close:hover{color:var(--white)}
-.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.m-field{border-bottom:1px solid var(--cborder);padding-bottom:0.8rem}
+.modal{background:var(--color-surface-raised);border:1px solid var(--cborder);border-radius:var(--radius-md);padding:var(--space-5);max-width:540px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-card)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4)}
+.modal-title{font-family:var(--font-primary);font-weight:800;font-size:1.2rem}
+.modal-close{
+  background: transparent;
+  border: 1px solid var(--cborder);
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--motion-instant);
+}
+.modal-close:hover{border-color:var(--color-accent-primary);color:var(--color-accent-primary)}
+.modal-close:focus-visible{outline:none;box-shadow:var(--shadow-focus)}
+
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+.m-field{border-bottom:1px solid var(--cborder);padding-bottom:var(--space-3)}
 .m-field.full{grid-column:span 2}
-.m-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:0.3rem}
-.m-value{font-size:0.9rem;color:var(--white);font-weight:500}
+.m-label{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--color-text-secondary);margin-bottom:var(--space-1)}
+.m-value{font-size:var(--font-size-sm);color:var(--color-text-primary);font-weight:500}
 
 @media(max-width:768px){
-  nav{padding:1rem 1.5rem}
+  nav{padding:var(--space-3) var(--space-4)}
   .nav-credit{font-size:0.68rem;padding:0.3rem 0.7rem}
-  .main{padding:2rem 1.5rem}
+  .main{padding:var(--space-4) var(--space-3)}
   .stats-row{grid-template-columns:1fr 1fr}
   .patient-row{flex-wrap:wrap}
-  .p-actions{width:100%}
+  .p-actions{width:100%;justify-content:flex-end}
   .modal-grid{grid-template-columns:1fr}
   .m-field.full{grid-column:span 1}
 }
-.page-credit{padding:0 2rem 2rem;text-align:center;color:var(--muted);font-size:0.78rem}
+.page-credit{padding:0 var(--space-4) var(--space-5);text-align:center;color:var(--color-text-secondary);font-size:var(--font-size-xs)}
 </style>
 </head>
 <body>
-<nav>
+<nav aria-label="Main Navigation">
   <div class="nav-brand">
-    <a href="index.html" class="logo">Sehat.</a>
+    <a href="index.html" class="logo" aria-label="Sehat Home">Sehat.</a>
     <span class="nav-credit">Made by Rudra Pratap singh</span>
   </div>
   <div class="nav-links">
-    <a href="register.html">Register</a>
-    <a href="scan.html">Scan</a>
-    <a href="dashboard.html" class="active">Dashboard</a>
+    <a href="register.html">Register Patient</a>
+    <a href="scan.html">Scan Health Card</a>
+    <a href="dashboard.html" class="active">Patient Dashboard</a>
   </div>
 </nav>
 
-<div class="main">
+<main class="main">
   <div class="page-header">
     <div>
       <h1>Sehat <em>Dashboard</em></h1>
-      <p>Manage patients, view records, and monitor access logs</p>
+      <p>Manage patients, view records, and monitor offline/online access logs</p>
     </div>
-    <a href="register.html" class="btn-primary">+ Register Patient</a>
+    <a href="register.html" class="btn-primary" aria-label="Register New Patient">+ Register Patient</a>
   </div>
 
   <!-- STATS -->
@@ -129,30 +347,30 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;paddi
   </div>
 
   <!-- TABS -->
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('patients',this)">Patients</button>
-    <button class="tab" onclick="switchTab('logs',this)">Audit Logs</button>
+  <div class="tabs" role="tablist" aria-label="Dashboard Views">
+    <button class="tab active" role="tab" aria-selected="true" aria-controls="tabPatients" onclick="switchTab('patients',this)">Registered Patients</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="tabLogs" onclick="switchTab('logs',this)">Audit Access Logs</button>
   </div>
 
   <!-- PATIENTS TAB -->
-  <div id="tabPatients">
+  <section id="tabPatients" role="tabpanel">
     <div class="patient-list" id="patientList"></div>
-  </div>
+  </section>
 
   <!-- LOGS TAB -->
-  <div id="tabLogs" style="display:none">
+  <section id="tabLogs" role="tabpanel" style="display:none">
     <div class="audit-list" id="auditList"></div>
-  </div>
-</div>
+  </section>
+</main>
 
-<p class="page-credit">Made by Rudra Pratap singh</p>
+<p class="page-credit">Made by Rudra Pratap singh · Sehat Rural Health Identity</p>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+<!-- PATIENT DETAILS MODAL -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
-      <span class="modal-title" id="modalTitle">Patient Record</span>
-      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      <h2 class="modal-title" id="modalTitle">Patient Record</h2>
+      <button class="modal-close" aria-label="Close patient details modal" onclick="closeModalDirect()">✕</button>
     </div>
     <div class="modal-grid" id="modalContent"></div>
   </div>
@@ -170,13 +388,17 @@ function getAllPatients(){
   return {...demoPatients,...stored};
 }
 
-function getInitials(name){return name.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function getInitials(name){return (name||'?').trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
 
 function getLogs(){return JSON.parse(localStorage.getItem('sehat_access_logs')||'[]')}
 
 function switchTab(tab,el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.remove('active');
+    t.setAttribute('aria-selected','false');
+  });
   el.classList.add('active');
+  el.setAttribute('aria-selected','true');
   document.getElementById('tabPatients').style.display=tab==='patients'?'block':'none';
   document.getElementById('tabLogs').style.display=tab==='logs'?'block':'none';
 }
@@ -186,7 +408,7 @@ function renderStats(){
   const logs=getLogs();
   document.getElementById('statTotal').textContent=Object.keys(patients).length;
   document.getElementById('statScans').textContent=logs.length;
-  document.getElementById('statEmergency').textContent=logs.filter(l=>l.type==='Emergency').length;
+  document.getElementById('statEmergency').textContent=logs.filter(l=>l.type==='Emergency (QR Scan)').length;
   document.getElementById('statFull').textContent=logs.filter(l=>l.type.includes('Full')).length;
 }
 
@@ -196,13 +418,13 @@ function renderPatients(){
   const arr=Object.values(patients);
 
   if(!arr.length){
-    list.innerHTML=`<div class="empty"><div class="empty-icon">🪪</div><p>No patients registered yet.</p><a href="register.html" class="btn-primary">Register First Patient</a></div>`;
+    list.innerHTML=`<div class="empty"><div class="empty-icon">🪪</div><p>No patients registered yet.</p><a href="register.html" class="btn-primary">+ Register First Patient</a></div>`;
     return;
   }
 
   list.innerHTML=arr.map(p=>`
-    <div class="patient-row" onclick="openModal('${p.id}')">
-      <div class="p-avatar">${getInitials(p.name)}</div>
+    <div class="patient-row" tabindex="0" onclick="openModal('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')openModal('${p.id}')" aria-label="View record for ${p.name}">
+      <div class="p-avatar" aria-hidden="true">${getInitials(p.name)}</div>
       <div class="p-info">
         <div class="p-name">${p.name}</div>
         <div class="p-meta">${p.id} · Registered ${p.registered||'—'}</div>
@@ -214,8 +436,8 @@ function renderPatients(){
         </div>
       </div>
       <div class="p-actions" onclick="event.stopPropagation()">
-        <a href="scan.html?id=${p.id}" class="btn-xs btn-xs-green">Scan →</a>
-        <button class="btn-xs btn-xs-ghost" onclick="openModal('${p.id}')">View</button>
+        <a href="scan.html?id=${p.id}" class="btn-xs btn-xs-green" aria-label="Scan card for ${p.name}">Scan QR Card →</a>
+        <button class="btn-xs btn-xs-ghost" onclick="openModal('${p.id}')" aria-label="View details for ${p.name}">View Details</button>
       </div>
     </div>
   `).join('');
@@ -244,15 +466,15 @@ function openModal(id){
   const all=getAllPatients();
   const p=all[id];
   if(!p)return;
-  document.getElementById('modalTitle').textContent=p.name;
+  document.getElementById('modalTitle').textContent=`Patient Record: ${p.name}`;
   const fields=[
-    {label:'Sehat ID',value:p.id,full:true},
+    {label:'Sehat Health ID',value:p.id,full:true},
     {label:'Full Name',value:p.name},
     {label:'Age / Gender',value:(p.age||'—')+' / '+(p.gender||'—')},
     {label:'Blood Group',value:p.blood||'—'},
     {label:'District',value:p.district||'—'},
-    {label:'Allergies',value:p.allergies||'None',full:true},
-    {label:'Medical Conditions',value:p.conditions||'None',full:true},
+    {label:'Known Allergies',value:p.allergies||'None',full:true},
+    {label:'Chronic Conditions',value:p.conditions||'None',full:true},
     {label:'Emergency Contact',value:p.emergency||'Not provided',full:true},
     {label:'Registered On',value:p.registered||'—'},
   ];
@@ -267,6 +489,13 @@ function openModal(id){
 
 function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalDirect()}
 function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open')}
+
+// Escape key to close modal
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('modalOverlay')?.classList.contains('open')) {
+    closeModalDirect();
+  }
+});
 
 // Handle ?id= in URL
 const urlParams=new URLSearchParams(window.location.search);

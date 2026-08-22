@@ -1,0 +1,34 @@
+{
+  "name": "sehat",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sehat — Offline-First Digital Health Identity for Rural India",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "dexie": "^4.0.0",
+    "html5-qrcode": "^2.3.8",
+    "lucide": "^0.441.0",
+    "motion": "^11.11.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "vite-plugin-pwa": "^0.20.5"
+  },
+  "_dependencyDocumentation": {
+    "motion": "Hardware-accelerated animations (JS runtime, lightweight alternative to React wrappers/GSAP)",
+    "lucide": "Tree-shakeable SVG icon set for accessible health UI (offline-ready)",
+    "dexie": "Minimal IndexedDB wrapper for on-device, zero-connectivity patient storage",
+    "qrcode": "Client-side offline canvas QR code generator for patient health cards",
+    "html5-qrcode": "Cross-platform camera barcode/QR scanner for rural health workers",
+    "@supabase/supabase-js": "Backend sync queue for Postgres + Auth when internet connectivity returns",
+    "vite": "Zero-config fast ES module bundler and dev server",
+    "vite-plugin-pwa": "Automatic service worker and offline caching configuration"
+  }
+}
