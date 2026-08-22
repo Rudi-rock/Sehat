@@ -84,8 +84,7 @@ This ensures **privacy + accessibility**.
 
 Try the working prototype:
 
-👉 [https://rudi-rock.github.io/Sehat](https://sehat-nu.vercel.app/)
-
+👉 https://sehat-nu.vercel.app/
 ---
 
 ## ✨ Key Features
